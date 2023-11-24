@@ -52,50 +52,62 @@ export function AddProduct() {
   };
 
   return (
-    <div>
-      <h1>Add Product</h1>
+    <div className="form__container">
+      <h2>Add Product</h2>
 
       <form id="submitProduct" onSubmit={handleSubmitProduct}>
-        <label htmlFor="productName">Product Name</label>
-        <input
-          type="text"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-        />
+        <div className="form__element">
+          <label htmlFor="productName">Name: </label>
+          <input
+            className="form__element--input"
+            type="text"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+          />
+        </div>
 
-        <select
-          name="productCategory"
-          value={productCategory}
-          onChange={(e) => setProductCategory(e.target.value)}
-        >
-          <option value="">Select</option>
-          <option value="Mobile Accessories">Mobile Accessories</option>
-          <option value="Audio">Audio</option>
-          <option value="Wearable">Wearable</option>
-          <option value="Computer Accessories">Computer Accessories</option>
-          <option value="Camera Accessories">Camera Accessories</option>
-        </select>
+        <div className="form__element">
+          <label htmlFor="productCategory">Category: </label>
+          <select
+            name="productCategory"
+            value={productCategory}
+            onChange={(e) => setProductCategory(e.target.value)}
+          >
+            <option value="">Select</option>
+            <option value="Mobile">Mobile Accessories</option>
+            <option value="Audio">Audio</option>
+            <option value="Wearable">Wearable</option>
+            <option value="Computer">Computer Accessories</option>
+            <option value="Camera">Camera Accessories</option>
+          </select>
+        </div>
 
-        <div>
-          <label htmlFor="productImage">Product Image</label>
+        <div className="form__element">
+          <label htmlFor="productImage">Image: </label>
           <input type="file" onChange={handleImageFile} />
         </div>
 
-        <label htmlFor="productPrice">Product Price</label>
-        <input
-          type="text"
-          value={productPrice}
-          onChange={(e) => setProductPrice(e.target.value)}
-        />
+        <div className="form__element">
+          <label htmlFor="productPrice">Price: </label>
+          <input
+            className="form__element--input"
+            type="text"
+            value={productPrice}
+            onChange={(e) => setProductPrice(e.target.value)}
+          />
+        </div>
 
-        <label htmlFor="productAvailable">Product Available</label>
-        <input
-          type="text"
-          value={productAvailable}
-          onChange={(e) => setProductAvailable(e.target.value)}
-        />
+        <div className="form__element">
+          <label htmlFor="productAvailable">Available: </label>
+          <input
+            className="form__element--input"
+            type="text"
+            value={productAvailable}
+            onChange={(e) => setProductAvailable(e.target.value)}
+          />
+        </div>
 
-        <div>
+        <div className="form__element">
           <button type="submit">Add</button>
         </div>
       </form>
