@@ -6,7 +6,7 @@ import cartSlice from "../features/role/cartSlice";
 export const store = configureStore({
   reducer: {
     products: productsSlice,
-    role: roleSlice,
+    roleStatus: roleSlice,
     cartProducts: cartSlice,
   },
 });

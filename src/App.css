@@ -158,7 +158,7 @@
   object-fit: cover;
 }
 
-.cart-or-add {
+.navbar__icon {
   font-size: 2rem;
   text-align: center;
   cursor: pointer;
@@ -193,18 +193,29 @@
 .form__element--input {
   width: 100%;
   padding: 8px 0 8px 8px;
+  margin: 0.5rem 0;
 }
 
-select,
-button {
-  display: inline-block;
-  width: 100%;
-  height: 35px;
-  padding: 0 15px;
+.form__radio {
+  margin: 0 15px;
   cursor: pointer;
 }
+
 button {
   background-color: #427d9d;
   border: none;
-  /* border-radius: 1.5rem; */
+  color: white;
+  cursor: pointer;
+}
+
+.form__element > select,
+.form__element > button {
+  width: 100%;
+  height: 35px;
+  padding: 0 15px;
+}
+
+.navbar__button {
+  padding: 10px 20px;
+  border-radius: 7px;
 }

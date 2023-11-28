@@ -5,6 +5,7 @@ import ProductsPage from "./features/product/productsPage";
 import { EditProduct } from "./features/product/EditProduct";
 import Navbar from "./components/Navbar";
 import CartProductsPage from "./components/cartProductsPage";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -22,9 +23,10 @@ function App() {
           />
           <Route path="/products/addProduct" element={<AddProduct />} />
 
-          <Route path="/products/edit/:productId" element={<EditProduct />} />
+          <Route path="/products/edit/:idInParam" element={<EditProduct />} />
 
           <Route path="/cart" element={<CartProductsPage />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </>

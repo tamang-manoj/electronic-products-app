@@ -1,22 +1,24 @@
-import type { RootState } from "../../app/store";
-import { useSelector } from "react-redux";
 import CardComponent from "./CardComponent";
-
-import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useEffect } from "react";
+import { initialData } from "./productsSlice";
 
 const ProductsPage = () => {
-  const products = useSelector((state: RootState) => state.products);
-  //   console.log(products);
-  const navigate = useNavigate();
+  const data = useAppSelector((state) => state.products.data);
+  // console.log(data);
 
-  const role = useAppSelector((state) => state.role.role);
-  // console.log(role);
+  const role = useAppSelector((state) => state.roleStatus.role);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(initialData());
+  }, []);
 
   return (
     <>
       <div className="products-container">
-        {products.map((product) => (
+        {data.map((product) => (
           <CardComponent key={product.id} product={product} role={role} />
         ))}
       </div>

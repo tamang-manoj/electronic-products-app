@@ -1,31 +1,43 @@
-import { selectedRole } from "../features/role/roleSlice";
-import { useDispatch } from "react-redux";
 import { GrCart } from "react-icons/gr";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { FaRegUser } from "react-icons/fa";
+import { MdAdminPanelSettings } from "react-icons/md";
+
 import { useNavigate } from "react-router";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { selectedRole } from "../features/role/roleSlice";
 
 const Navbar = () => {
-  const dispatch = useDispatch();
+  const roleStatus = useAppSelector((state) => state.roleStatus);
+  const role = roleStatus.role;
+  const loggedIn = roleStatus.loggedIn;
+  // console.log(loggedIn);
 
-  const role = useAppSelector((state) => state.role.role);
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleSelectRole = (e: any) => {
-    const role = e.target.value;
-    dispatch(selectedRole(role));
-    role ? navigate("/") : null;
-    // console.log(role);
+  const handleLogout = () => {
+    dispatch(selectedRole({ role: "user", loggedIn: false }));
+    navigate("/");
+  };
+  const handleLogin = () => {
+    navigate("/login");
   };
 
   return (
     <>
       <div className="navbar">
-        <h1>Electronic Products</h1>
-        <div className="cart-or-add">
+        <div onClick={() => navigate("/")}>
+          <h1>Electronic Products</h1>
+        </div>
+
+        <div className="navbar__icon">
           {role === "user" ? (
-            <GrCart onClick={() => navigate("/cart")} />
+            <GrCart
+              onClick={() => {
+                loggedIn ? navigate("/cart") : navigate("/login");
+              }}
+            />
           ) : (
             <div>
               <IoMdAddCircleOutline
@@ -37,17 +49,25 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="role">
-          <select
-            name="role"
-            id="role"
-            defaultValue="user"
-            onChange={handleSelectRole}
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
+        <div className="navbar__icon">
+          {role === "admin" ? (
+            <MdAdminPanelSettings style={{ color: "#FBF8BE" }} />
+          ) : role === "user" && loggedIn ? (
+            <FaRegUser style={{ color: "#FBF8BE" }} />
+          ) : (
+            <FaRegUser />
+          )}
         </div>
+
+        {loggedIn ? (
+          <button className="navbar__button" onClick={handleLogout}>
+            Logout
+          </button>
+        ) : (
+          <button className="navbar__button" onClick={handleLogin}>
+            Login
+          </button>
+        )}
       </div>
     </>
   );

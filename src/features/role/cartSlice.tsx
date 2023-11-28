@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 
 export interface CartState {
   id: any;
@@ -10,17 +9,7 @@ export interface CartState {
   productAvailable: string;
 }
 
-const initialState: CartState[] = [
-  //   {
-  //     id: uuidv4(),
-  //     productName: "VR Headset",
-  //     productCategory: "Wearable",
-  //     imgFile:
-  //       "https://images.pexels.com/photos/3831136/pexels-photo-3831136.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-  //     productPrice: "8000",
-  //     productAvailable: "10",
-  //   },
-];
+const initialState: CartState[] = [];
 
 export const cartSlice = createSlice({
   name: "cartProducts",

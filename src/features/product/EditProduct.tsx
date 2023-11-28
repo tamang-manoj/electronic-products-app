@@ -2,25 +2,34 @@ import { editProduct } from "./productsSlice";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { storage } from "../../firebase";
 
 export function EditProduct() {
-  const { productId } = useParams();
+  const { idInParam } = useParams();
 
   const product = useAppSelector((state) => {
-    return state.products.find((product) => product.id === productId);
+    return state.products.data.find((product) => product.id === idInParam);
   });
-  // console.log(product);
-  // const editId = product?.id;
 
-  const prevName = product?.productName;
-  const prevCategory = product?.productCategory;
-  const prevImgFile = product?.imgFile;
+  const prevId = product?.id;
+  const prevProductId = product?.productId;
+  const prevProductName = product?.productName;
+  const prevProductCategory = product?.productCategory;
+
+  const prevImgUrl = product?.imgUrl;
   const prevProductPrice = product?.productPrice;
   const prevProductAvailable = product?.productAvailable;
 
-  const [productName, setProductName] = useState(prevName);
-  const [productCategory, setProductCategory] = useState(prevCategory);
-  const [imgFile, setImgFile] = useState(prevImgFile);
+  const [productName, setProductName] = useState(prevProductName);
+  const [productCategory, setProductCategory] = useState(prevProductCategory);
+  const [imgFile, setImgFile] = useState(null);
+  const [imgUrl, setImgUrl] = useState(prevImgUrl);
   const [productPrice, setProductPrice] = useState(prevProductPrice);
   const [productAvailable, setProductAvailable] =
     useState(prevProductAvailable);
@@ -28,35 +37,53 @@ export function EditProduct() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleImageFile = (e: any) => {
-    e.preventDefault();
-
-    setImgFile(URL.createObjectURL(e.target.files?.[0]));
+  const handleEditImageFile = (e: any) => {
+    setImgFile(e.target.files[0]);
   };
 
   const handleSubmitEditProduct = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (
-      productName &&
-      productCategory &&
-      imgFile &&
-      productPrice &&
-      productAvailable
-    ) {
-      dispatch(
-        editProduct({
-          editId: productId,
-          productName,
-          productCategory,
-          imgFile,
-          productPrice,
-          productAvailable,
-        })
-      );
+    if (productName && productCategory && productPrice && productAvailable) {
+      if (imgFile) {
+        // deleting first
+        const deleteRef = ref(storage, `/images/${prevProductId}`);
+        deleteObject(deleteRef);
+
+        // uploading new and then downloading new
+        uploadBytes(ref(storage, `/images/${prevProductId}`), imgFile).then(
+          () => {
+            getDownloadURL(ref(storage, `/images/${prevProductId}`)).then(
+              (url) =>
+                dispatch(
+                  editProduct({
+                    id: prevId,
+                    productId: prevProductId,
+                    productName,
+                    productCategory,
+                    imgUrl: url,
+                    productPrice,
+                    productAvailable,
+                  })
+                )
+            );
+          }
+        );
+      } else {
+        dispatch(
+          editProduct({
+            id: prevId,
+            productId: prevProductId,
+            productName,
+            productCategory,
+            imgUrl,
+            productPrice,
+            productAvailable,
+          })
+        );
+      }
 
       navigate("/");
-      console.log("submitted");
     }
   };
 
@@ -92,7 +119,7 @@ export function EditProduct() {
 
         <div className="form__element">
           <label htmlFor="productImage">Product Image</label>
-          <input type="file" onChange={handleImageFile} />
+          <input type="file" onChange={handleEditImageFile} />
         </div>
 
         <div className="form__element">

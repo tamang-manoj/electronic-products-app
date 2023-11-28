@@ -3,25 +3,29 @@ import { addProduct } from "./productsSlice";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../firebase";
 
 export function AddProduct() {
-  const [productName, setProductName] = useState("");
-  const [productCategory, setProductCategory] = useState("");
-  const [imgFile, setImgFile] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-  const [productAvailable, setProductAvailable] = useState("");
+  const [productName, setProductName] = useState(
+    "Apple iPhone 11 - 128 GB - Oliz Store"
+  );
+  const [productCategory, setProductCategory] = useState("Mobile");
+  const [imgFile, setImgFile] = useState(null);
+  const [productPrice, setProductPrice] = useState("85500");
+  const [productAvailable, setProductAvailable] = useState("53");
+
+  const productId = uuidv4();
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const handleImageFile = (e: any) => {
-    e.preventDefault();
-    // console.log(e.target.files);
-    setImgFile(URL.createObjectURL(e.target.files?.[0]));
+    setImgFile(e.target.files[0]);
   };
 
-  const handleSubmitProduct = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (
@@ -31,22 +35,20 @@ export function AddProduct() {
       productPrice &&
       productAvailable
     ) {
-      // console.log("submitted");
-      dispatch(
-        addProduct({
-          id: uuidv4(),
-          productName,
-          productCategory,
-          imgFile,
-          productPrice,
-          productAvailable,
-        })
-      );
-      setProductName("");
-      setProductCategory("");
-      setImgFile("");
-      setProductPrice("");
-      setProductAvailable("");
+      uploadBytes(ref(storage, `/images/${productId}`), imgFile).then(() => {
+        getDownloadURL(ref(storage, `/images/${productId}`)).then((url) =>
+          dispatch(
+            addProduct({
+              imgUrl: url,
+              productId,
+              productName,
+              productCategory,
+              productPrice,
+              productAvailable,
+            })
+          )
+        );
+      });
       navigate("/");
     }
   };
@@ -84,7 +86,11 @@ export function AddProduct() {
 
         <div className="form__element">
           <label htmlFor="productImage">Image: </label>
-          <input type="file" onChange={handleImageFile} />
+          <input
+            type="file"
+            accept="image/png,image/jpeg"
+            onChange={handleImageFile}
+          />
         </div>
 
         <div className="form__element">
