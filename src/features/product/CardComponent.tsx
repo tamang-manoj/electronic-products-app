@@ -18,17 +18,18 @@ export interface ProductState {
   productAvailable: string;
 }
 
-interface Props {
-  product: ProductState;
-  role: string;
-}
+// interface Props {
+//   product: ProductState;
+//   role: string;
+// }
 
-const CardComponent = ({ product, role }: Props) => {
-  const roleStatus = useAppSelector((state) => state.roleStatus);
-  const isLoggeIn = roleStatus.loggedIn;
+const CardComponent = ({ product }: any) => {
+  const characters = useAppSelector((state) => state.characters);
+  const charArray = characters.charArray;
+  const loggedIn = characters.loggedIn;
+  const loggedInRole = characters.loggedInRole;
+
   const cartProducts = useAppSelector((state) => state.cartProducts.data);
-
-  // console.log(products);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ const CardComponent = ({ product, role }: Props) => {
     );
     // console.log(productAlreadyInCart);
 
-    if (isLoggeIn) {
+    if (loggedIn) {
       if (productAlreadyInCart) {
         alert("Product is already in the cart!");
       } else {
@@ -90,7 +91,7 @@ const CardComponent = ({ product, role }: Props) => {
       </div>
 
       <div>
-        {role === "user" ? (
+        {loggedInRole === "user" ? (
           <div
             className="card__icon"
             onClick={() =>

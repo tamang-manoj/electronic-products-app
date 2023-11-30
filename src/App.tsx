@@ -5,11 +5,12 @@ import ProductsPage from "./features/product/productsPage";
 import { EditProduct } from "./features/product/EditProduct";
 import Navbar from "./components/Navbar";
 import CartProductsPage from "./components/cartProductsPage";
-import Login from "./components/Login";
+
 import { useAppDispatch } from "./app/hooks";
 import { initialData } from "./features/product/productsSlice";
 import { initialCartData } from "./features/role/cartSlice";
 import { useEffect } from "react";
+import Login from "./components/Login";
 
 function App() {
   const dispatch = useAppDispatch();

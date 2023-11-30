@@ -1,23 +1,23 @@
 import { GrCart } from "react-icons/gr";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { FaRegUser } from "react-icons/fa";
-import { MdAdminPanelSettings } from "react-icons/md";
+// import { FaRegUser } from "react-icons/fa";
+// import { MdAdminPanelSettings } from "react-icons/md";
 
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { selectedRole } from "../features/role/roleSlice";
+import { charToSelect } from "../features/role/characterSlice";
 
 const Navbar = () => {
-  const roleStatus = useAppSelector((state) => state.roleStatus);
-  const role = roleStatus.role;
-  const loggedIn = roleStatus.loggedIn;
-  // console.log(loggedIn);
+  const characters = useAppSelector((state) => state.characters);
+  const charArray = characters.charArray;
+  const loggedIn = characters?.loggedIn;
+  const loggedInRole = characters.loggedInRole;
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(selectedRole({ role: "user", loggedIn: false }));
+    dispatch(charToSelect({ loggedIn: false, loggedInRole: "user" }));
     navigate("/");
   };
   const handleLogin = () => {
@@ -32,13 +32,13 @@ const Navbar = () => {
         </div>
 
         <div className="navbar__icon">
-          {role === "user" ? (
+          {loggedInRole === "user" && loggedIn ? (
             <GrCart
               onClick={() => {
                 loggedIn ? navigate("/cart") : navigate("/login");
               }}
             />
-          ) : (
+          ) : loggedInRole === "admin" ? (
             <div>
               <IoMdAddCircleOutline
                 onClick={() => {
@@ -46,10 +46,10 @@ const Navbar = () => {
                 }}
               />
             </div>
-          )}
+          ) : null}
         </div>
 
-        <div className="navbar__icon">
+        {/* <div className="navbar__icon">
           {role === "admin" ? (
             <MdAdminPanelSettings style={{ color: "#FBF8BE" }} />
           ) : role === "user" && loggedIn ? (
@@ -57,7 +57,7 @@ const Navbar = () => {
           ) : (
             <FaRegUser />
           )}
-        </div>
+        </div> */}
 
         {loggedIn ? (
           <button className="navbar__button" onClick={handleLogout}>

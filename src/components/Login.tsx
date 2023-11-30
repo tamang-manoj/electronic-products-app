@@ -1,22 +1,41 @@
 import { useState } from "react";
-import { useAppDispatch } from "../app/hooks";
-import { selectedRole } from "../features/role/roleSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useNavigate } from "react-router";
+import { charToSelect } from "../features/role/characterSlice";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [email, setEmail] = useState("@gmail.com");
+
+  const characters = useAppSelector((state) => state.characters);
+  const charArray = characters.charArray;
+  // const loggedIn = characters.loggedIn;
+  // const loggedInCharacter = characters.loggedInCharacter;
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleRoleLogin = (e: any) => {
     e.preventDefault();
-    if (role) {
-      dispatch(selectedRole({ role: role, loggedIn: true }));
-      navigate("/");
+
+    if (email) {
+      const foundCharacter = charArray.find(
+        (character) => character.email === email
+      );
+
+      if (foundCharacter) {
+        dispatch(
+          charToSelect({ loggedIn: true, loggedInRole: foundCharacter.role })
+        );
+        navigate("/");
+      } else {
+        alert("Email not found!");
+      }
     }
+
+    // if (role) {
+    //   dispatch(selectedRole({ role: role, loggedIn: true }));
+    //   navigate("/");
+    // }
   };
 
   return (
@@ -29,51 +48,8 @@ function Login() {
           <input
             className="form__element--input"
             type="text"
-            // value={email}
-            value="khusi@gmail.com"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div className="form__element">
-          <label htmlFor="password">Password: </label>
-          <input
-            className="form__element--input"
-            type="text"
-            // value={password}
-            value="Khusi@123Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <div className="form__element">
-          {/* <label htmlFor="role">Role: </label>
-          <select
-            name="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="">Select</option>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select> */}
-
-          <label htmlFor="user">User</label>
-          <input
-            className="form__radio"
-            type="radio"
-            name="role"
-            value="user"
-            onChange={(e) => setRole(e.target.value)}
-          />
-
-          <label htmlFor="admin">Admin</label>
-          <input
-            className="form__radio"
-            type="radio"
-            name="role"
-            value="admin"
-            onChange={(e) => setRole(e.target.value)}
           />
         </div>
 

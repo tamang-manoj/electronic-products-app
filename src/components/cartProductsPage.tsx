@@ -8,7 +8,7 @@ const CartProductsPage = () => {
   return (
     <>
       {cartProducts.length === 0 ? (
-        <div className="empty-cart">
+        <div className="empty-product">
           <h1>No Products in the cart</h1>
         </div>
       ) : (

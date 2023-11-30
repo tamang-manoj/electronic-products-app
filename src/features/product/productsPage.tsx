@@ -5,21 +5,24 @@ const ProductsPage = () => {
   const products = useAppSelector((state) => state.products);
   // console.log(products.data);
   const data = products.data;
+  // console.log(data);
   const isLoading = products.isLoading;
-
-  const role = useAppSelector((state) => state.roleStatus.role);
 
   return (
     <>
       {isLoading ? (
-        <div>
+        <div className="empty-product">
           <h1>Loading...</h1>
         </div>
-      ) : (
+      ) : data.length !== 0 ? (
         <div className="products-container">
           {data.map((product) => (
-            <CardComponent key={product.id} product={product} role={role} />
+            <CardComponent key={product.id} product={product} />
           ))}
+        </div>
+      ) : (
+        <div className="empty-product">
+          <h1>No Products To Show</h1>
         </div>
       )}
     </>
