@@ -6,8 +6,19 @@ import { EditProduct } from "./features/product/EditProduct";
 import Navbar from "./components/Navbar";
 import CartProductsPage from "./components/cartProductsPage";
 import Login from "./components/Login";
+import { useAppDispatch } from "./app/hooks";
+import { initialData } from "./features/product/productsSlice";
+import { initialCartData } from "./features/role/cartSlice";
+import { useEffect } from "react";
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(initialData());
+    dispatch(initialCartData());
+  }, []);
+
   return (
     <>
       <BrowserRouter>

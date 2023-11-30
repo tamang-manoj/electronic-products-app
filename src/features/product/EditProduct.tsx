@@ -18,7 +18,7 @@ export function EditProduct() {
   });
 
   const prevId = product?.id;
-  const prevProductId = product?.productId;
+  const prevProductImgId = product?.productImgId;
   const prevProductName = product?.productName;
   const prevProductCategory = product?.productCategory;
 
@@ -47,18 +47,18 @@ export function EditProduct() {
     if (productName && productCategory && productPrice && productAvailable) {
       if (imgFile) {
         // deleting first
-        const deleteRef = ref(storage, `/images/${prevProductId}`);
+        const deleteRef = ref(storage, `/images/${prevProductImgId}`);
         deleteObject(deleteRef);
 
         // uploading new and then downloading new
-        uploadBytes(ref(storage, `/images/${prevProductId}`), imgFile).then(
+        uploadBytes(ref(storage, `/images/${prevProductImgId}`), imgFile).then(
           () => {
-            getDownloadURL(ref(storage, `/images/${prevProductId}`)).then(
+            getDownloadURL(ref(storage, `/images/${prevProductImgId}`)).then(
               (url) =>
                 dispatch(
                   editProduct({
                     id: prevId,
-                    productId: prevProductId,
+                    productImgId: prevProductImgId,
                     productName,
                     productCategory,
                     imgUrl: url,
@@ -73,7 +73,7 @@ export function EditProduct() {
         dispatch(
           editProduct({
             id: prevId,
-            productId: prevProductId,
+            productImgId: prevProductImgId,
             productName,
             productCategory,
             imgUrl,

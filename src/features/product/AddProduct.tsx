@@ -15,7 +15,7 @@ export function AddProduct() {
   const [productPrice, setProductPrice] = useState("85500");
   const [productAvailable, setProductAvailable] = useState("53");
 
-  const productId = uuidv4();
+  const productImgId = uuidv4();
 
   const dispatch = useDispatch();
 
@@ -35,12 +35,12 @@ export function AddProduct() {
       productPrice &&
       productAvailable
     ) {
-      uploadBytes(ref(storage, `/images/${productId}`), imgFile).then(() => {
-        getDownloadURL(ref(storage, `/images/${productId}`)).then((url) =>
+      uploadBytes(ref(storage, `/images/${productImgId}`), imgFile).then(() => {
+        getDownloadURL(ref(storage, `/images/${productImgId}`)).then((url) =>
           dispatch(
             addProduct({
               imgUrl: url,
-              productId,
+              productImgId,
               productName,
               productCategory,
               productPrice,

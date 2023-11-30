@@ -126,7 +126,17 @@
   margin: 0.25rem 0;
 }
 .card__icon:hover {
-  background-color: #164863;
+  /* background-color: #164863; */
+  color: orangered;
+}
+
+.cartIcon--delete {
+  text-align: center;
+  height: 100%;
+}
+.cartIcon--delete:hover {
+  cursor: pointer;
+  color: orangered;
 }
 
 /* .cartProduct-container {
@@ -148,11 +158,11 @@
   margin-right: 5rem;
 }
 
-.cartImage-container {
+.cartImage__container {
   height: 5rem;
   width: 7rem;
 }
-.cartImage-container img {
+.cartImage__container img {
   width: 100%;
   height: 100%;
   object-fit: cover;

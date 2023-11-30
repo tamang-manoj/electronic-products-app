@@ -1,26 +1,29 @@
-interface CardProductState {
-  id: any;
-  productName: string;
-  productCategory: string;
-  imgFile: string;
-  productPrice: string;
-  productAvailable: string;
-}
+import { MdOutlineDelete } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { deleteFromCart } from "../features/role/cartSlice";
 
-interface Prop {
-  cartProduct: CardProductState;
-}
+const CartComponent = ({ cartProduct }: any) => {
+  const dispatch = useDispatch();
 
-const CartComponent = ({ cartProduct }: Prop) => {
-  // console.log(cartProduct);
+  const deleteCartItem = async (cartProduct: any) => {
+    // console.log(cartProduct);
+    dispatch(deleteFromCart(cartProduct.cartItemId));
+  };
+
   return (
     <>
       <div className="cartProductCard">
-        <div className="cartImage-container">
-          <img src={`${cartProduct.imgFile}`} alt="product_image" />
+        <div className="cartImage__container">
+          <img src={`${cartProduct.imgUrl}`} alt="cartProduct-image" />
         </div>
         <div>{cartProduct.productName}</div>
-        <div>{cartProduct.productPrice}</div>
+        <div>{cartProduct.productCategory}</div>
+        <div>Rs. {cartProduct.productPrice}</div>
+        <div>{cartProduct.productAvailable}</div>
+
+        <div onClick={() => deleteCartItem(cartProduct)}>
+          <MdOutlineDelete className="cartIcon--delete" />
+        </div>
       </div>
     </>
   );

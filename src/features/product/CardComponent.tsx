@@ -3,13 +3,14 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import { BsCart3 } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { addToCart } from "../role/cartSlice";
+import { addToCart, deleteFromCart } from "../role/cartSlice";
 import { deleteProduct } from "./productsSlice";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "../../firebase";
 
 export interface ProductState {
   id?: any;
+  productImgId: string;
   productName: string;
   productCategory: string;
   imgUrl: string;
@@ -24,17 +25,26 @@ interface Props {
 
 const CardComponent = ({ product, role }: Props) => {
   const roleStatus = useAppSelector((state) => state.roleStatus);
-  const cartProducts = useAppSelector((state) => state.cartProducts);
   const isLoggeIn = roleStatus.loggedIn;
+  const cartProducts = useAppSelector((state) => state.cartProducts.data);
+
+  // console.log(products);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleDelete = (product: any) => {
+  const handleProductDelete = (product: any) => {
     dispatch(deleteProduct(product.id));
-    // dispatch(deleteImg(id, productName));
 
-    const deleteRef = ref(storage, `/images/${product.productId}`);
+    const isItemInCart = cartProducts.find(
+      (cartProduct) => cartProduct.productImgId === product.productImgId
+    );
+
+    if (isItemInCart) {
+      dispatch(deleteFromCart(isItemInCart.cartItemId));
+    }
+
+    const deleteRef = ref(storage, `/images/${product.productImgId}`);
     deleteObject(deleteRef)
       .then(() => {
         // console.log("image deleted from storage");
@@ -44,17 +54,22 @@ const CardComponent = ({ product, role }: Props) => {
       });
   };
 
-  const handleAddToCart = () => {
-    // console.log("added to cart");
-    const already = cartProducts.find(
-      (cartProduct) => cartProduct.id === product.id
+  const handleAddToCart = (productToAdd: any) => {
+    const productAlreadyInCart = cartProducts.find(
+      (cartProduct) => cartProduct.productImgId === productToAdd.productImgId
     );
+    // console.log(productAlreadyInCart);
 
-    !isLoggeIn
-      ? navigate("/login")
-      : !already
-      ? dispatch(addToCart(product))
-      : alert("Product already in the cart!");
+    if (isLoggeIn) {
+      if (productAlreadyInCart) {
+        alert("Product is already in the cart!");
+      } else {
+        dispatch(addToCart(productToAdd));
+        alert("Product added to cart.");
+      }
+    } else {
+      navigate("/login");
+    }
   };
 
   const handleEdit = () => {
@@ -76,7 +91,19 @@ const CardComponent = ({ product, role }: Props) => {
 
       <div>
         {role === "user" ? (
-          <div className="card__icon" onClick={handleAddToCart}>
+          <div
+            className="card__icon"
+            onClick={() =>
+              handleAddToCart({
+                imgUrl: product.imgUrl,
+                productName: product.productName,
+                productCategory: product.productCategory,
+                productAvailable: product.productAvailable,
+                productPrice: product.productPrice,
+                productImgId: product.productImgId,
+              })
+            }
+          >
             <BsCart3 />
           </div>
         ) : (
@@ -84,7 +111,10 @@ const CardComponent = ({ product, role }: Props) => {
             <div className="card__icon" onClick={handleEdit}>
               <FaRegEdit />
             </div>
-            <div className="card__icon" onClick={() => handleDelete(product)}>
+            <div
+              className="card__icon"
+              onClick={() => handleProductDelete(product)}
+            >
               <MdOutlineDelete />
             </div>
           </>

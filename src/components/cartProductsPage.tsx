@@ -2,20 +2,23 @@ import { useAppSelector } from "../app/hooks";
 import CartComponent from "../components/CartComponent";
 
 const CartProductsPage = () => {
-  const cartProducts = useAppSelector((state) => state.cartProducts);
+  const cartProducts = useAppSelector((state) => state.cartProducts.data);
   // console.log(cartProducts);
 
   return (
     <>
-      {cartProducts.length !== 0 ? (
-        <div className="cartProduct-container">
-          {cartProducts.map((cartProduct) => (
-            <CartComponent key={cartProduct.id} cartProduct={cartProduct} />
-          ))}
-        </div>
-      ) : (
+      {cartProducts.length === 0 ? (
         <div className="empty-cart">
           <h1>No Products in the cart</h1>
+        </div>
+      ) : (
+        <div className="cartProduct-container">
+          {cartProducts.map((cartProduct) => (
+            <CartComponent
+              key={cartProduct.cartItemId}
+              cartProduct={cartProduct}
+            />
+          ))}
         </div>
       )}
     </>
