@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router";
-import { charToSelect } from "../features/role/characterSlice";
+import { charToSelect } from "./characterSlice";
 
 function Login() {
   const [email, setEmail] = useState("@gmail.com");

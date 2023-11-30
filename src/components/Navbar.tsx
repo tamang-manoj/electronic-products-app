@@ -1,11 +1,9 @@
 import { GrCart } from "react-icons/gr";
 import { IoMdAddCircleOutline } from "react-icons/io";
-// import { FaRegUser } from "react-icons/fa";
-// import { MdAdminPanelSettings } from "react-icons/md";
 
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { charToSelect } from "../features/role/characterSlice";
+import { charToSelect } from "../features/character/characterSlice";
 
 const Navbar = () => {
   const characters = useAppSelector((state) => state.characters);
@@ -48,16 +46,6 @@ const Navbar = () => {
             </div>
           ) : null}
         </div>
-
-        {/* <div className="navbar__icon">
-          {role === "admin" ? (
-            <MdAdminPanelSettings style={{ color: "#FBF8BE" }} />
-          ) : role === "user" && loggedIn ? (
-            <FaRegUser style={{ color: "#FBF8BE" }} />
-          ) : (
-            <FaRegUser />
-          )}
-        </div> */}
 
         {loggedIn ? (
           <button className="navbar__button" onClick={handleLogout}>

@@ -1,16 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useAppDispatch } from "./app/hooks";
+
 import { AddProduct } from "./features/product/AddProduct";
 import ProductsPage from "./features/product/productsPage";
 import { EditProduct } from "./features/product/EditProduct";
 import Navbar from "./components/Navbar";
-import CartProductsPage from "./components/cartProductsPage";
+import CartProductsPage from "./features/cart/cartProductsPage";
 
-import { useAppDispatch } from "./app/hooks";
 import { initialData } from "./features/product/productsSlice";
-import { initialCartData } from "./features/role/cartSlice";
-import { useEffect } from "react";
-import Login from "./components/Login";
+import Login from "./features/character/Login";
+import { initialCartData } from "./features/cart/cartSlice";
 
 function App() {
   const dispatch = useAppDispatch();

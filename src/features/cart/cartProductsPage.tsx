@@ -1,5 +1,5 @@
-import { useAppSelector } from "../app/hooks";
-import CartComponent from "../components/CartComponent";
+import { useAppSelector } from "../../app/hooks";
+import CartComponent from "./CartComponent";
 
 const CartProductsPage = () => {
   const cartProducts = useAppSelector((state) => state.cartProducts.data);

@@ -1,6 +1,6 @@
 import { MdOutlineDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { deleteFromCart } from "../features/role/cartSlice";
+import { deleteFromCart } from "./cartSlice";
 
 const CartComponent = ({ cartProduct }: any) => {
   const dispatch = useDispatch();

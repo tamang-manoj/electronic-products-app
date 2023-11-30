@@ -3,10 +3,11 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import { BsCart3 } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { addToCart, deleteFromCart } from "../role/cartSlice";
+
 import { deleteProduct } from "./productsSlice";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "../../firebase";
+import { addToCart, deleteFromCart } from "../cart/cartSlice";
 
 export interface ProductState {
   id?: any;
