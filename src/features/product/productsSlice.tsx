@@ -11,10 +11,9 @@ import {
 // import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface DataState {
-  id: any;
+  id: string;
   productName: string;
   productCategory: string;
-
   imgUrl: string;
   productPrice: string;
   productAvailable: string;

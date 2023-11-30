@@ -7,13 +7,13 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 
 export function AddProduct() {
-  const [productName, setProductName] = useState(
-    "Apple iPhone 11 - 128 GB - Oliz Store"
-  );
-  const [productCategory, setProductCategory] = useState("Mobile");
+  const [productName, setProductName] = useState("");
+  const [productCategory, setProductCategory] = useState("");
   const [imgFile, setImgFile] = useState(null);
-  const [productPrice, setProductPrice] = useState("85500");
-  const [productAvailable, setProductAvailable] = useState("53");
+  const [productPrice, setProductPrice] = useState("");
+  const [productAvailable, setProductAvailable] = useState("");
+
+  const [disableButton, setDisableButton] = useState(false);
 
   const productImgId = uuidv4();
 
@@ -27,6 +27,8 @@ export function AddProduct() {
 
   const handleSubmitProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setDisableButton(true);
 
     if (
       productName &&
@@ -46,10 +48,9 @@ export function AddProduct() {
               productPrice,
               productAvailable,
             })
-          )
+          ).then(() => navigate("/"))
         );
       });
-      navigate("/");
     }
   };
 
@@ -114,7 +115,9 @@ export function AddProduct() {
         </div>
 
         <div className="form__element">
-          <button type="submit">Add</button>
+          <button type="submit" disabled={disableButton}>
+            Add
+          </button>
         </div>
       </form>
     </div>

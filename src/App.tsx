@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-import { useAppDispatch } from "./app/hooks";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 
 import { AddProduct } from "./features/product/AddProduct";
 import ProductsPage from "./features/product/productsPage";
@@ -12,9 +12,14 @@ import CartProductsPage from "./features/cart/cartProductsPage";
 import { initialData } from "./features/product/productsSlice";
 import Login from "./features/character/Login";
 import { initialCartData } from "./features/cart/cartSlice";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
   const dispatch = useAppDispatch();
+
+  const characters = useAppSelector((state) => state.characters);
+  const loggedIn = characters.loggedIn;
+  const loggedInRole = characters.loggedInRole;
 
   useEffect(() => {
     dispatch(initialData());
@@ -34,11 +39,20 @@ function App() {
               </>
             }
           />
-          <Route path="/products/addProduct" element={<AddProduct />} />
+          <Route
+            path="/products/addProduct"
+            element={loggedIn ? <AddProduct /> : <ErrorPage />}
+          />
 
-          <Route path="/products/edit/:idInParam" element={<EditProduct />} />
+          <Route
+            path="/products/edit/:idInParam"
+            element={loggedIn ? <EditProduct /> : <ErrorPage />}
+          />
 
-          <Route path="/cart" element={<CartProductsPage />} />
+          <Route
+            path="/cart"
+            element={loggedIn ? <CartProductsPage /> : <ErrorPage />}
+          />
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>

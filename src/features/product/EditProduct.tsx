@@ -65,7 +65,7 @@ export function EditProduct() {
                     productPrice,
                     productAvailable,
                   })
-                )
+                ).then(() => navigate("/"))
             );
           }
         );
@@ -80,10 +80,8 @@ export function EditProduct() {
             productPrice,
             productAvailable,
           })
-        );
+        ).then(() => navigate("/"));
       }
-
-      navigate("/");
     }
   };
 
