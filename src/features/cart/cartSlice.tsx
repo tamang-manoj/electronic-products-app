@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
@@ -56,9 +56,11 @@ export const initialCartData = createAsyncThunk(
 export const addToCart: any = createAsyncThunk(
   "cartProducts/addToCart",
   async (productToAddToCart: any, thunkAPI) => {
-    await addDoc(collection(db, "cartProductsCollection"), productToAddToCart);
-    thunkAPI.dispatch(initialCartData()).unwrap();
-    // console.log(productToAddToCart);
+    await setDoc(
+      doc(db, "cartProductsCollection", productToAddToCart.productImgId),
+      productToAddToCart
+    );
+    thunkAPI.dispatch(initialCartData());
   }
 );
 
@@ -66,7 +68,7 @@ export const deleteFromCart: any = createAsyncThunk(
   "cartProducts/deleteFromCart",
   async (id: any, { dispatch }) => {
     await deleteDoc(doc(db, "cartProductsCollection", id));
-    dispatch(initialCartData()).unwrap();
+    dispatch(initialCartData());
   }
 );
 

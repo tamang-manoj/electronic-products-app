@@ -8,6 +8,7 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import { addToCart } from "../cart/cartSlice";
 // import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface DataState {
@@ -82,6 +83,7 @@ export const editProduct = createAsyncThunk(
   async (editedProduct: any, thunkAPI) => {
     await updateDoc(doc(db, "products", editedProduct.id), editedProduct);
     thunkAPI.dispatch(initialData());
+    thunkAPI.dispatch(addToCart(editedProduct));
   }
 );
 

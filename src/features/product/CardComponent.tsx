@@ -10,23 +10,17 @@ import { storage } from "../../firebase";
 import { addToCart, deleteFromCart } from "../cart/cartSlice";
 
 export interface ProductState {
-  id?: any;
+  id?: string;
   productImgId: string;
   productName: string;
   productCategory: string;
   imgUrl: string;
-  productPrice: string;
-  productAvailable: string;
+  productPrice: number;
+  productAvailable: number;
 }
-
-// interface Props {
-//   product: ProductState;
-//   role: string;
-// }
 
 const CardComponent = ({ product }: any) => {
   const characters = useAppSelector((state) => state.characters);
-  const charArray = characters.charArray;
   const loggedIn = characters.loggedIn;
   const loggedInRole = characters.loggedInRole;
 

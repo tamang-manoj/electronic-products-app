@@ -9,9 +9,10 @@ import { storage } from "../../firebase";
 export function AddProduct() {
   const [productName, setProductName] = useState("");
   const [productCategory, setProductCategory] = useState("");
-  const [imgFile, setImgFile] = useState(null);
+  const [imgFile, setImgFile] = useState<File>();
   const [productPrice, setProductPrice] = useState("");
   const [productAvailable, setProductAvailable] = useState("");
+  const [imgShow, setImgShow] = useState("");
 
   const [disableButton, setDisableButton] = useState(false);
 
@@ -21,15 +22,18 @@ export function AddProduct() {
 
   const navigate = useNavigate();
 
-  const handleImageFile = (e: any) => {
-    setImgFile(e.target.files[0]);
+  const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target.files);
+    if (e.target.files) {
+      if (e.target.files.length !== 0) {
+        setImgFile(e.target.files[0]);
+        setImgShow(URL.createObjectURL(e.target.files[0]));
+      }
+    }
   };
 
   const handleSubmitProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    setDisableButton(true);
-
     if (
       productName &&
       productCategory &&
@@ -37,6 +41,8 @@ export function AddProduct() {
       productPrice &&
       productAvailable
     ) {
+      setDisableButton(true);
+
       uploadBytes(ref(storage, `/images/${productImgId}`), imgFile).then(() => {
         getDownloadURL(ref(storage, `/images/${productImgId}`)).then((url) =>
           dispatch(
@@ -70,27 +76,38 @@ export function AddProduct() {
         </div>
 
         <div className="form__element">
-          <label htmlFor="productCategory">Category: </label>
+          <div className="category__label">
+            <label htmlFor="productCategory">Category:</label>
+          </div>
+
           <select
+            id="productCategory"
             name="productCategory"
             value={productCategory}
             onChange={(e) => setProductCategory(e.target.value)}
           >
-            <option value="">Select</option>
-            <option value="Mobile">Mobile Accessories</option>
+            <option value=""></option>
+            <option value="Mobile">Mobile</option>
             <option value="Audio">Audio</option>
             <option value="Wearable">Wearable</option>
-            <option value="Computer">Computer Accessories</option>
-            <option value="Camera">Camera Accessories</option>
+            <option value="Computer">Computer</option>
+            <option value="Camera">Camera</option>
           </select>
         </div>
 
         <div className="form__element">
-          <label htmlFor="productImage">Image: </label>
+          <label htmlFor="productImage" className="custom-file-upload">
+            Image:
+            <div className=" form__image--show">
+              {imgShow ? <img src={imgShow} /> : ""}
+            </div>
+          </label>
+
           <input
             type="file"
-            accept="image/png,image/jpeg"
+            accept="image/png, image/jpeg"
             onChange={handleImageFile}
+            id="productImage"
           />
         </div>
 

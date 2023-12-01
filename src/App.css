@@ -95,6 +95,7 @@
 }
 .card__description > p {
   font-size: 0.75rem;
+  text-wrap: wrap;
 }
 .card__description > h5 {
   min-height: 2.25rem;
@@ -195,9 +196,14 @@
   text-align: left;
 }
 
+.form__container > h2 {
+  color: #427d9d;
+  margin-bottom: 1.5rem;
+}
+
 .form__element {
   width: 90%;
-  margin: 20px 0 20px 0;
+  margin: 10px 0 10px 0;
   /* position: relative; */
 }
 .form__element--input {
@@ -206,10 +212,14 @@
   margin: 0.5rem 0;
 }
 
-.form__radio {
+.category__label {
+  margin: 0.5rem 0;
+}
+
+/* .form__radio {
   margin: 0 15px;
   cursor: pointer;
-}
+} */
 
 button {
   background-color: #427d9d;
@@ -228,4 +238,43 @@ button {
 .navbar__button {
   padding: 10px 20px;
   border-radius: 7px;
+}
+
+.form__image--show {
+  height: 5rem;
+  width: 7rem;
+  margin: 0.5rem 0 0 0;
+  background-color: #cccccc;
+}
+.form__image--show > img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+button:disabled {
+  background-color: #cccccc;
+}
+
+/* input[type="file"]::file-selector-button {
+  border: 2px solid #6c5ce7;
+  padding: 0.2em 0.4em;
+  border-radius: 0.2em;
+  background-color: #a29bfe;
+  transition: 1s;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #81ecec;
+  border: 2px solid #00cec9;
+} */
+
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  /* border: 1px solid #cccccc; */
+  display: inline-block;
+  /* padding: 6px 12px; */
+  cursor: pointer;
 }

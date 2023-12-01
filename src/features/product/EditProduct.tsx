@@ -21,24 +21,29 @@ export function EditProduct() {
   const prevProductImgId = product?.productImgId;
   const prevProductName = product?.productName;
   const prevProductCategory = product?.productCategory;
-
+  // console.log(prevProductCategory);
   const prevImgUrl = product?.imgUrl;
   const prevProductPrice = product?.productPrice;
   const prevProductAvailable = product?.productAvailable;
 
   const [productName, setProductName] = useState(prevProductName);
   const [productCategory, setProductCategory] = useState(prevProductCategory);
-  const [imgFile, setImgFile] = useState(null);
-  const [imgUrl, setImgUrl] = useState(prevImgUrl);
+  const [imgFile, setImgFile] = useState<File>();
+  const [imgShow, setImgShow] = useState(prevImgUrl);
   const [productPrice, setProductPrice] = useState(prevProductPrice);
   const [productAvailable, setProductAvailable] =
     useState(prevProductAvailable);
+
+  const [disableButton, setDisableButton] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleEditImageFile = (e: any) => {
     setImgFile(e.target.files[0]);
+    if (e.target.files[0]) {
+      setImgShow(URL.createObjectURL(e.target.files[0]));
+    }
   };
 
   const handleSubmitEditProduct = (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,11 +51,11 @@ export function EditProduct() {
 
     if (productName && productCategory && productPrice && productAvailable) {
       if (imgFile) {
-        // deleting first
+        // deleting image first
         const deleteRef = ref(storage, `/images/${prevProductImgId}`);
         deleteObject(deleteRef);
 
-        // uploading new and then downloading new
+        // uploading new image and then downloading new image
         uploadBytes(ref(storage, `/images/${prevProductImgId}`), imgFile).then(
           () => {
             getDownloadURL(ref(storage, `/images/${prevProductImgId}`)).then(
@@ -76,21 +81,24 @@ export function EditProduct() {
             productImgId: prevProductImgId,
             productName,
             productCategory,
-            imgUrl,
+            imgUrl: prevImgUrl,
             productPrice,
             productAvailable,
           })
         ).then(() => navigate("/"));
       }
+
+      setDisableButton(true);
     }
   };
 
   return (
     <div className="form__container">
-      <h1>Edit Product</h1>
+      <h2>Edit Product</h2>
+
       <form id="submitEditProduct" onSubmit={handleSubmitEditProduct}>
         <div className="form__element">
-          <label htmlFor="productName">Product Name</label>
+          <label htmlFor="productName">Name</label>
           <input
             className="form__element--input"
             type="text"
@@ -100,28 +108,43 @@ export function EditProduct() {
         </div>
 
         <div className="form__element">
-          <label htmlFor="productCategory">Category: </label>
+          <div className="category__label">
+            <label htmlFor="productCategory">Category:</label>
+          </div>
+
           <select
+            id="productCategory"
             name="productCategory"
             value={productCategory}
             onChange={(e) => setProductCategory(e.target.value)}
           >
-            <option value="">Select</option>
-            <option value="Mobile Accessories">Mobile Accessories</option>
+            <option value=""></option>
+            <option value="Mobile Accessories">Mobile</option>
             <option value="Audio">Audio</option>
             <option value="Wearable">Wearable</option>
-            <option value="Computer Accessories">Computer Accessories</option>
-            <option value="Camera Accessories">Camera Accessories</option>
+            <option value="Computer Accessories">Computer</option>
+            <option value="Camera Accessories">Camera</option>
           </select>
         </div>
 
         <div className="form__element">
-          <label htmlFor="productImage">Product Image</label>
-          <input type="file" onChange={handleEditImageFile} />
+          <label htmlFor="productImage" className="custom-file-upload">
+            Image:
+            <div className=" form__image--show">
+              {imgShow ? <img src={imgShow} /> : ""}
+            </div>
+          </label>
+
+          <input
+            id="productImage"
+            type="file"
+            accept="image/png, image/jpeg"
+            onChange={handleEditImageFile}
+          />
         </div>
 
         <div className="form__element">
-          <label htmlFor="productPrice">Product Price</label>
+          <label htmlFor="productPrice">Price</label>
           <input
             className="form__element--input"
             type="text"
@@ -131,7 +154,7 @@ export function EditProduct() {
         </div>
 
         <div className="form__element">
-          <label htmlFor="productAvailable">Product Available</label>
+          <label htmlFor="productAvailable">Available</label>
           <input
             className="form__element--input"
             type="text"
@@ -141,7 +164,9 @@ export function EditProduct() {
         </div>
 
         <div className="form__element">
-          <button type="submit">Save</button>
+          <button type="submit" disabled={disableButton}>
+            Save
+          </button>
         </div>
       </form>
     </div>
