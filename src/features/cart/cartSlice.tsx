@@ -64,12 +64,12 @@ export const addToCart: any = createAsyncThunk(
   }
 );
 
-export const deleteFromCart: any = createAsyncThunk(
-  "cartProducts/deleteFromCart",
-  async (id: any, { dispatch }) => {
-    await deleteDoc(doc(db, "cartProductsCollection", id));
-    dispatch(initialCartData());
-  }
-);
+// export const deleteFromCart: any = createAsyncThunk(
+//   "cartProducts/deleteFromCart",
+//   async (id: any, { dispatch }) => {
+//     await deleteDoc(doc(db, "cartProductsCollection", id));
+//     dispatch(initialCartData());
+//   }
+// );
 
 export default cartSlice.reducer;
