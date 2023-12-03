@@ -39,10 +39,12 @@ export function EditProduct() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleEditImageFile = (e: any) => {
-    setImgFile(e.target.files[0]);
-    if (e.target.files[0]) {
-      setImgShow(URL.createObjectURL(e.target.files[0]));
+  const handleEditImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e?.target.files) {
+      setImgFile(e.target.files[0]);
+      if (e.target.files[0]) {
+        setImgShow(URL.createObjectURL(e.target.files[0]));
+      }
     }
   };
 

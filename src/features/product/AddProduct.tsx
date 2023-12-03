@@ -7,14 +7,14 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 
 export function AddProduct() {
-  const [productName, setProductName] = useState("");
-  const [productCategory, setProductCategory] = useState("");
+  const [productName, setProductName] = useState<string>("");
+  const [productCategory, setProductCategory] = useState<string>("");
   const [imgFile, setImgFile] = useState<File>();
-  const [productPrice, setProductPrice] = useState("");
-  const [productAvailable, setProductAvailable] = useState("");
-  const [imgShow, setImgShow] = useState("");
+  const [productPrice, setProductPrice] = useState<string>("");
+  const [productAvailable, setProductAvailable] = useState<string>("");
+  const [imgShow, setImgShow] = useState<string>("");
 
-  const [disableButton, setDisableButton] = useState(false);
+  const [disableButton, setDisableButton] = useState<boolean>(false);
 
   const productImgId = uuidv4();
 

@@ -8,11 +8,11 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { addToCart } from "../cart/cartSlice";
+import { CartState, updateEditInCart } from "../cart/cartSlice";
 // import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface DataState {
-  id: string;
+  id?: string;
   productName: string;
   productCategory: string;
   imgUrl: string;
@@ -37,21 +37,21 @@ export const productsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(initialData.pending, (state) => {
+      .addCase(getProducts.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(initialData.fulfilled, (state: any, action) => {
+      .addCase(getProducts.fulfilled, (state: any, action) => {
         state.data = action.payload;
         state.isLoading = false;
       })
-      .addCase(initialData.rejected, (state: any, action) => {
+      .addCase(getProducts.rejected, () => {
         console.log("rejected");
       });
   },
 });
 
-export const initialData = createAsyncThunk(
-  "products/initialData",
+export const getProducts = createAsyncThunk(
+  "products/getProducts",
   async () => {
     const querySnapshot = await getDocs(collection(db, "products"));
     const newData = querySnapshot.docs.map((doc) => ({
@@ -66,15 +66,15 @@ export const addProduct: any = createAsyncThunk(
   "products/addProduct",
   async (newProduct: DataState, thunkAPI) => {
     await addDoc(collection(db, "products"), newProduct);
-    thunkAPI.dispatch(initialData());
+    thunkAPI.dispatch(getProducts());
   }
 );
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (id: any, { dispatch }) => {
+  async (id: string, { dispatch }) => {
     await deleteDoc(doc(db, "products", id));
-    dispatch(initialData());
+    dispatch(getProducts());
   }
 );
 
@@ -82,8 +82,23 @@ export const editProduct = createAsyncThunk(
   "products/editProduct",
   async (editedProduct: any, thunkAPI) => {
     await updateDoc(doc(db, "products", editedProduct.id), editedProduct);
-    thunkAPI.dispatch(initialData());
-    thunkAPI.dispatch(addToCart(editedProduct));
+    thunkAPI.dispatch(getProducts());
+
+    // console.log("edited product is: ", editedProduct);
+
+    const { cartProducts }: any = thunkAPI.getState();
+
+    const isEditProductInCart = cartProducts.data.find(
+      (cartProduct: CartState) =>
+        cartProduct.productImgId === editedProduct.productImgId
+    );
+
+    if (isEditProductInCart) {
+      thunkAPI.dispatch(
+        updateEditInCart({ isEditProductInCart, editedProduct })
+      );
+      // console.log("edited product in cart: ", isEditProductInCart);
+    }
   }
 );
 

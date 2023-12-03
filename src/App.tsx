@@ -9,9 +9,9 @@ import { EditProduct } from "./features/product/EditProduct";
 import Navbar from "./components/Navbar";
 import CartProductsPage from "./features/cart/cartProductsPage";
 
-import { initialData } from "./features/product/productsSlice";
+import { getProducts } from "./features/product/productsSlice";
 import Login from "./features/character/Login";
-import { initialCartData } from "./features/cart/cartSlice";
+import { getCartData } from "./features/cart/cartSlice";
 import ErrorPage from "./components/ErrorPage";
 
 function App() {
@@ -22,8 +22,8 @@ function App() {
   const loggedInRole = characters.loggedInRole;
 
   useEffect(() => {
-    dispatch(initialData());
-    dispatch(initialCartData());
+    dispatch(getProducts());
+    dispatch(getCartData());
   }, []);
 
   return (

@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
-  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
@@ -31,14 +32,14 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(initialCartData.fulfilled, (state: any, action) => {
+    builder.addCase(getCartData.fulfilled, (state: any, action) => {
       state.data = action.payload;
     });
   },
 });
 
-export const initialCartData = createAsyncThunk(
-  "cartProducts/initialCartData",
+export const getCartData = createAsyncThunk(
+  "cartProducts/getCartData",
   async () => {
     const querySnapshot = await getDocs(
       collection(db, "cartProductsCollection")
@@ -56,11 +57,8 @@ export const initialCartData = createAsyncThunk(
 export const addToCart: any = createAsyncThunk(
   "cartProducts/addToCart",
   async (productToAddToCart: any, thunkAPI) => {
-    await setDoc(
-      doc(db, "cartProductsCollection", productToAddToCart.productImgId),
-      productToAddToCart
-    );
-    thunkAPI.dispatch(initialCartData());
+    await addDoc(collection(db, "cartProductsCollection"), productToAddToCart);
+    thunkAPI.dispatch(getCartData());
   }
 );
 
@@ -68,7 +66,20 @@ export const deleteFromCart: any = createAsyncThunk(
   "cartProducts/deleteFromCart",
   async (id: any, { dispatch }) => {
     await deleteDoc(doc(db, "cartProductsCollection", id));
-    dispatch(initialCartData());
+    dispatch(getCartData());
+  }
+);
+
+export const updateEditInCart = createAsyncThunk(
+  "cartProducts/updateEditInCart",
+  async ({ isEditProductInCart, editedProduct }: any, thunkAPI) => {
+    await updateDoc(
+      doc(db, "cartProductsCollection", isEditProductInCart.cartItemId),
+      editedProduct
+    );
+    // console.log(isEditProductInCart);
+    // console.log("updated", editedProduct);
+    thunkAPI.dispatch(getCartData());
   }
 );
 

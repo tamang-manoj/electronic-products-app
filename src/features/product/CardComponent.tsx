@@ -4,22 +4,26 @@ import { MdOutlineDelete } from "react-icons/md";
 import { BsCart3 } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
-import { deleteProduct } from "./productsSlice";
+import { DataState, deleteProduct } from "./productsSlice";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "../../firebase";
 import { addToCart, deleteFromCart } from "../cart/cartSlice";
 
-export interface ProductState {
-  id?: string;
-  productImgId: string;
-  productName: string;
-  productCategory: string;
-  imgUrl: string;
-  productPrice: number;
-  productAvailable: number;
-}
+// export interface ProductState {
+//   id?: string;
+//   productImgId: string;
+//   productName: string;
+//   productCategory: string;
+//   imgUrl: string;
+//   productPrice: string;
+//   productAvailable: string;
+// }
 
-const CardComponent = ({ product }: any) => {
+type ProductProp = {
+  product: DataState;
+};
+
+const CardComponent = ({ product }: ProductProp) => {
   const characters = useAppSelector((state) => state.characters);
   const loggedIn = characters.loggedIn;
   const loggedInRole = characters.loggedInRole;
@@ -29,8 +33,8 @@ const CardComponent = ({ product }: any) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleProductDelete = (product: any) => {
-    dispatch(deleteProduct(product.id));
+  const handleProductDelete = (product: DataState) => {
+    if (product.id) dispatch(deleteProduct(product.id));
 
     const isItemInCart = cartProducts.find(
       (cartProduct) => cartProduct.productImgId === product.productImgId
@@ -50,7 +54,7 @@ const CardComponent = ({ product }: any) => {
       });
   };
 
-  const handleAddToCart = (productToAdd: any) => {
+  const handleAddToCart = (productToAdd: DataState) => {
     const productAlreadyInCart = cartProducts.find(
       (cartProduct) => cartProduct.productImgId === productToAdd.productImgId
     );
