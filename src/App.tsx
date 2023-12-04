@@ -19,7 +19,6 @@ function App() {
 
   const characters = useAppSelector((state) => state.characters);
   const loggedIn = characters.loggedIn;
-  const loggedInRole = characters.loggedInRole;
 
   useEffect(() => {
     dispatch(getProducts());
