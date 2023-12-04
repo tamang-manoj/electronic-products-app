@@ -7,7 +7,6 @@ import { charToSelect } from "../features/character/characterSlice";
 
 const Navbar = () => {
   const characters = useAppSelector((state) => state.characters);
-  const charArray = characters.charArray;
   const loggedIn = characters?.loggedIn;
   const loggedInRole = characters.loggedInRole;
 
