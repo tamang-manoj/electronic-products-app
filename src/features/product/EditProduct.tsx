@@ -120,7 +120,7 @@ export function EditProduct() {
             value={productCategory}
             onChange={(e) => setProductCategory(e.target.value)}
           >
-            <option value=""></option>
+            <option value="">Select</option>
             <option value="Mobile Accessories">Mobile</option>
             <option value="Audio">Audio</option>
             <option value="Wearable">Wearable</option>

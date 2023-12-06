@@ -8,22 +8,22 @@ import { DataState, deleteProduct } from "./productsSlice";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "../../firebase";
 import { addToCart, deleteFromCart } from "../cart/cartSlice";
-
-// export interface ProductState {
-//   id?: string;
-//   productImgId: string;
-//   productName: string;
-//   productCategory: string;
-//   imgUrl: string;
-//   productPrice: string;
-//   productAvailable: string;
-// }
+import { useState } from "react";
+import PopupCard from "./PopupCard";
 
 type ProductProp = {
   product: DataState;
 };
 
 const CardComponent = ({ product }: ProductProp) => {
+  const [open, setOpen] = useState(false);
+  const handleCardOpen = () => {
+    setOpen(true);
+  };
+  const handleCardClose = () => {
+    setOpen(false);
+  };
+
   const characters = useAppSelector((state) => state.characters);
   const loggedIn = characters.loggedIn;
   const loggedInRole = characters.loggedInRole;
@@ -77,50 +77,114 @@ const CardComponent = ({ product }: ProductProp) => {
   };
 
   return (
-    <div className="product-card">
-      <div className="image-container">
-        <img src={product.imgUrl} />
-      </div>
+    <>
+      <div className="card" onClick={handleCardOpen}>
+        {open}
 
-      <div className="card__description">
-        <h5>{product.productName}</h5>
-        <p>Category: {product.productCategory}</p>
-        <p>Available: {product.productAvailable}</p>
-        <h5>Price: Rs. {product.productPrice}</h5>
-      </div>
+        <div className="image-container">
+          <img src={product.imgUrl} />
+        </div>
 
-      <div>
-        {loggedInRole === "user" ? (
-          <div
-            className="card__icon"
-            onClick={() =>
-              handleAddToCart({
-                imgUrl: product.imgUrl,
-                productName: product.productName,
-                productCategory: product.productCategory,
-                productAvailable: product.productAvailable,
-                productPrice: product.productPrice,
-                productImgId: product.productImgId,
-              })
-            }
-          >
-            <BsCart3 />
-          </div>
-        ) : (
-          <>
-            <div className="card__icon" onClick={handleEdit}>
-              <FaRegEdit />
-            </div>
+        <div className="card__description">
+          <h5>{product.productName}</h5>
+          <h5>Price: Rs. {product.productPrice}</h5>
+        </div>
+
+        {/* <div>
+          {loggedInRole === "user" ? (
             <div
               className="card__icon"
-              onClick={() => handleProductDelete(product)}
+              onClick={() =>
+                handleAddToCart({
+                  imgUrl: product.imgUrl,
+                  productName: product.productName,
+                  productCategory: product.productCategory,
+                  productAvailable: product.productAvailable,
+                  productPrice: product.productPrice,
+                  productImgId: product.productImgId,
+                })
+              }
             >
-              <MdOutlineDelete />
+              <BsCart3 />
             </div>
-          </>
-        )}
+          ) : (
+            <>
+              <div className="card__icon" onClick={handleEdit}>
+                <FaRegEdit />
+              </div>
+              <div
+                className="card__icon"
+                onClick={() => handleProductDelete(product)}
+              >
+                <MdOutlineDelete />
+              </div>
+            </>
+          )}
+        </div> */}
       </div>
-    </div>
+
+      {/* Modal Popup */}
+      <PopupCard open={open} handleCardClose={handleCardClose}>
+        <div className="popup__elements">
+          <div>
+            <img src={product.imgUrl} className="popup__card--img" />
+          </div>
+
+          <div className="popup__card--description">
+            <h3 className="popup__heading">{product.productName}</h3>
+            <p className="popup__category">
+              Category: {product.productCategory}
+            </p>
+            <hr />
+            <h1 className="popup__price">Rs. {product.productPrice}</h1>
+
+            <div className="countAndIconSection">
+              <div>
+                {loggedInRole === "user" ? (
+                  <div className="popup__card--footer">
+                    <div>
+                      Quantity{" "}
+                      <button className="popup__card--countButton">-</button>
+                      <span>{"56"}</span>
+                      <button className="popup__card--countButton">+</button>
+                    </div>
+
+                    <div
+                      className="popup__card--cartIcon"
+                      onClick={() =>
+                        handleAddToCart({
+                          imgUrl: product.imgUrl,
+                          productName: product.productName,
+                          productCategory: product.productCategory,
+                          productAvailable: product.productAvailable,
+                          productPrice: product.productPrice,
+                          productImgId: product.productImgId,
+                        })
+                      }
+                    >
+                      <BsCart3 />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="popup__card--footer">
+                    <div className="popup__card--cartIcon" onClick={handleEdit}>
+                      <FaRegEdit />
+                    </div>
+
+                    <div
+                      className="popup__card--cartIcon"
+                      onClick={() => handleProductDelete(product)}
+                    >
+                      <MdOutlineDelete />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </PopupCard>
+    </>
   );
 };
 

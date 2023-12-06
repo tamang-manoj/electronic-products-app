@@ -17,14 +17,17 @@ export interface CartState {
   imgUrl: string;
   productPrice: string;
   productAvailable: string;
+  count?: number;
 }
 
 interface InitialState {
   data: CartState[];
+  loading: boolean;
 }
 
 const initialState: InitialState = {
   data: [],
+  loading: false,
 };
 
 export const cartSlice = createSlice({
@@ -34,6 +37,13 @@ export const cartSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getCartData.fulfilled, (state: any, action) => {
       state.data = action.payload;
+    });
+
+    builder.addCase(updateProductCount.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateProductCount.fulfilled, (state) => {
+      state.loading = false;
     });
   },
 });
@@ -57,7 +67,10 @@ export const getCartData = createAsyncThunk(
 export const addToCart: any = createAsyncThunk(
   "cartProducts/addToCart",
   async (productToAddToCart: any, thunkAPI) => {
-    await addDoc(collection(db, "cartProductsCollection"), productToAddToCart);
+    await addDoc(collection(db, "cartProductsCollection"), {
+      ...productToAddToCart,
+      count: 1,
+    });
     thunkAPI.dispatch(getCartData());
   }
 );
@@ -79,6 +92,26 @@ export const updateEditInCart = createAsyncThunk(
     );
     // console.log(isEditProductInCart);
     // console.log("updated", editedProduct);
+    thunkAPI.dispatch(getCartData());
+  }
+);
+
+export const updateProductCount: any = createAsyncThunk(
+  "cartProducts/updateProductCount",
+  async (
+    {
+      cartItemId,
+      newCount,
+    }: {
+      cartItemId: string;
+      newCount: number;
+    },
+    thunkAPI
+  ) => {
+    await updateDoc(doc(db, "cartProductsCollection", cartItemId), {
+      count: newCount,
+    });
+    // console.log(newCount);
     thunkAPI.dispatch(getCartData());
   }
 );

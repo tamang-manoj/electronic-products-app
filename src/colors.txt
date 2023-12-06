@@ -1,0 +1,6 @@
+gray: #f0f0f0
+another gray: #bbbbbb
+wrapper background GRAY: #e8e8e8
+
+dark-blue: #213555
+lighter-blue: #4F709C

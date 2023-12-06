@@ -15,7 +15,7 @@ const ProductsPage = () => {
           <h1>Loading...</h1>
         </div>
       ) : data.length !== 0 ? (
-        <div className="products-container">
+        <div className="card-container">
           {data.map((product) => (
             // <CardComponent key={product.id} product={product} />
             <CardComponent key={product.id} product={product} />
