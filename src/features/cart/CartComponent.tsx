@@ -1,30 +1,25 @@
+import "./CartComponent.css";
+
 import { MdOutlineDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { deleteFromCart } from "./cartSlice";
 import { updateProductCount } from "./cartSlice";
 import { useAppSelector } from "../../app/hooks";
-import Loading from "./Loading";
 
 const CartComponent = ({ cartProduct }: any) => {
   const dispatch = useDispatch();
 
-  // products from main products
   const products = useAppSelector((state) => state.products.data);
   const selectedProductsInfo = products.find(
     (product) => product.productImgId === cartProduct.productImgId
   );
   const productAvailable = Number(selectedProductsInfo?.productAvailable);
 
-  // FROM CART PRODUCTS
-
-  const cartProducts = useAppSelector((state) => state.cartProducts);
-  const isLoading = cartProducts.loading;
-
   const handleIncrement = () => {
     dispatch(
       updateProductCount({
-        cartItemId: cartProduct.cartItemId,
-        newCount: cartProduct.count + 1,
+        productAlreadyInCart: cartProduct,
+        newCount: 1,
       })
     );
   };
@@ -32,8 +27,8 @@ const CartComponent = ({ cartProduct }: any) => {
   const handleDecrement = () => {
     dispatch(
       updateProductCount({
-        cartItemId: cartProduct.cartItemId,
-        newCount: cartProduct.count - 1,
+        productAlreadyInCart: cartProduct,
+        newCount: -1,
       })
     );
   };
@@ -72,27 +67,22 @@ const CartComponent = ({ cartProduct }: any) => {
         </div>
 
         <div className="cart__card--changeCount">
-          <span>
-            <button
-              className="decrement"
-              onClick={handleDecrement}
-              disabled={cartProduct.count === 1}
-            >
-              -
-            </button>
-          </span>
+          <button
+            className="popup__card--countButton"
+            onClick={handleDecrement}
+            disabled={cartProduct.count === 1}
+          >
+            -
+          </button>
 
-          <span> {isLoading ? <Loading /> : cartProduct.count} </span>
-
-          <span>
-            <button
-              className="increment"
-              onClick={handleIncrement}
-              disabled={cartProduct.count === productAvailable}
-            >
-              +
-            </button>
-          </span>
+          <span> {cartProduct.count} </span>
+          <button
+            className="popup__card--countButton"
+            onClick={handleIncrement}
+            disabled={cartProduct.count === productAvailable}
+          >
+            +
+          </button>
         </div>
       </div>
     </>

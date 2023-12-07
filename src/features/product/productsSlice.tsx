@@ -19,6 +19,7 @@ export interface DataState {
   productPrice: string;
   productAvailable: string;
   productImgId: string;
+  productDescription: string;
 }
 
 export interface ProductState {
@@ -47,6 +48,10 @@ export const productsSlice = createSlice({
       .addCase(getProducts.rejected, () => {
         console.log("rejected");
       });
+
+    // builder.addCase(addProduct.pending, (state) => {
+    //   state.isLoading = true;
+    // });
   },
 });
 

@@ -12,14 +12,14 @@
 
 .popup__card {
   background: #f0f0f0;
-  height: 25rem;
-  width: 70rem;
+  height: 30rem;
+  width: 76rem;
   margin: auto;
   padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 5px 5px 5px #4f709c;
+  /* box-shadow: 5px 5px 5px #bbbbbb; */
   position: relative;
 }
+
 .popup__closer {
   position: absolute;
   top: -1rem;
@@ -28,6 +28,7 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
+  border: none;
   background-color: #4f709c;
   color: #f0f0f0;
   cursor: pointer;
@@ -38,32 +39,45 @@
 
 .popup__elements {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 .popup__elements > div > img {
-  height: 20rem;
+  height: 26rem;
   width: 25rem;
   object-fit: cover;
 }
 
 .popup__heading {
   color: #213555;
-  font-size: 1.5rem;
-  min-height: 6rem;
+  font-size: 1.25rem;
+  min-height: 3rem;
 }
 
 .popup__category {
   font-size: 1rem;
-  margin: 1rem 0;
+  margin: 0.1rem 0 1rem 0;
+  color: #bbbbbb;
 }
 
 .popup__price {
   color: #213555;
-  margin: 2rem 0;
+  margin: 1rem 0;
 }
 
-.popup__card--description + hr {
+.popup__description {
+  min-height: 11.75rem;
+  margin: 1rem 0 0 0;
+  line-height: 1.25rem;
+}
+
+.popup__card--info {
+  padding: 0.25rem;
+  word-break: break-all;
+}
+
+.popup__card--info hr {
   border-top: 1px solid #bbbbbb;
+  width: 45rem;
 }
 
 /* .countAndIconSection {
@@ -78,19 +92,71 @@
 .popup__card--countButton {
   height: 2rem;
   width: 2rem;
+  cursor: pointer;
+  border: none;
+  background-color: #bbbbbb;
 }
-.popup__card--footer span {
-  margin: 0.5rem;
+.popup__card--footer span,
+.cart__card--changeCount span {
+  display: inline-block;
+  text-align: center;
+  min-width: 2.5rem;
 }
 .popup__card--cartIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 1.5rem;
   color: #f0f0f0;
   background: #4f709c;
   height: 2.5rem;
-  width: 7rem;
-  text-align: center;
+  width: 8rem;
   border-radius: 0.25rem;
+  cursor: pointer;
 }
 .popup__card--cartIcon:hover {
   background-color: #213555;
 }
+
+.deletePopup__card {
+  position: relative;
+  background: #f0f0f0;
+  height: 12rem;
+  width: 24rem;
+  margin: auto;
+  padding: 2rem;
+}
+
+.deletePopup__card p {
+  font-size: 1.25rem;
+}
+
+.deletePopup__buttons--container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.deletePopup__buttons--container button {
+  height: 2.5rem;
+  width: 5.5rem;
+  background-color: #4f709c;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+.deletePopup__buttons--container button:hover {
+  background-color: #213555;
+  color: white;
+  border: none;
+}
+
+/* .deletePopup__card {
+  position: relative;
+  background: #f0f0f0;
+  height: 15rem;
+  width: 30rem;
+  margin: auto;
+  padding: 2rem;
+} */

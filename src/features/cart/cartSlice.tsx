@@ -10,7 +10,7 @@ import {
 import { db } from "../../firebase";
 
 export interface CartState {
-  cartItemId: string;
+  cartItemId?: string;
   productImgId: string;
   productName: string;
   productCategory: string;
@@ -69,7 +69,6 @@ export const addToCart: any = createAsyncThunk(
   async (productToAddToCart: any, thunkAPI) => {
     await addDoc(collection(db, "cartProductsCollection"), {
       ...productToAddToCart,
-      count: 1,
     });
     thunkAPI.dispatch(getCartData());
   }
@@ -100,19 +99,37 @@ export const updateProductCount: any = createAsyncThunk(
   "cartProducts/updateProductCount",
   async (
     {
-      cartItemId,
+      productAlreadyInCart,
       newCount,
     }: {
-      cartItemId: string;
+      productAlreadyInCart: {
+        cartItemId: string;
+        productImgId: string;
+        productName: string;
+        productCategory: string;
+        imgUrl: string;
+        productPrice: string;
+        productAvailable: string;
+        count: number;
+      };
       newCount: number;
     },
     thunkAPI
   ) => {
-    await updateDoc(doc(db, "cartProductsCollection", cartItemId), {
-      count: newCount,
-    });
+    await updateDoc(
+      doc(db, "cartProductsCollection", productAlreadyInCart.cartItemId),
+      {
+        count: productAlreadyInCart.count + newCount,
+      }
+    );
     // console.log(newCount);
     thunkAPI.dispatch(getCartData());
+
+    // await updateDoc(doc(db, "cartProductsCollection", cartItemId), {
+    //   count: newCount,
+    // });
+    // // console.log(newCount);
+    // thunkAPI.dispatch(getCartData());
   }
 );
 
