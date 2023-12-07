@@ -6,8 +6,8 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { charToSelect } from "../features/character/characterSlice";
 
 const Navbar = () => {
-  const products = useAppSelector((state) => state.products.data);
-  const productsCount = products.length;
+  // const products = useAppSelector((state) => state.products.data);
+  // const productsCount = products.length;
 
   const cartProducts = useAppSelector((state) => state.cartProducts.data);
   const cartProductsCount = cartProducts.length;
@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <>
       <div className="navbar">
-        <div className="navbar__header" onClick={() => navigate("/")}>
+        <div className="navbar__logo" onClick={() => navigate("/")}>
           <h1>Electronic Products</h1>
         </div>
 
@@ -54,23 +54,16 @@ const Navbar = () => {
                 }}
               >
                 <IoMdAddCircleOutline />
-                <span className="icon__badge">{productsCount}</span>
+                {/* <span className="icon__badge">{productsCount}</span> */}
               </div>
             ) : null}
           </div>
 
-          <div>
-            {" "}
-            {loggedIn ? (
-              <button className="navbar__button" onClick={handleLogout}>
-                Logout
-              </button>
-            ) : (
-              <button className="navbar__button" onClick={handleLogin}>
-                Login
-              </button>
-            )}
-          </div>
+          {loggedIn ? (
+            <button onClick={handleLogout}>Logout</button>
+          ) : (
+            <button onClick={handleLogin}>Login</button>
+          )}
         </div>
       </div>
     </>

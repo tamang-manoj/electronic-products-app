@@ -1,0 +1,72 @@
+.cart__product--card {
+  margin: 1rem 7rem;
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+}
+.cart__product--card > * {
+  margin: 0.7rem;
+}
+.cartImage__container {
+  height: 5rem;
+  width: 7rem;
+}
+.cartImage__container img {
+  height: 5rem;
+  width: 7rem;
+  object-fit: cover;
+}
+
+.info__section {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.75rem;
+  width: 30rem;
+}
+.cart__card--name {
+  font-size: 1rem;
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* font-weight: 550; */
+}
+.cart__card--category {
+  font-size: 0.75rem;
+  color: rgb(37, 37, 37);
+}
+.cart__card--available {
+  font-size: 0.9rem;
+}
+
+.cart__card--priceAndDelete {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cart__card--price {
+  color: #213555;
+  font-size: 1.25rem;
+}
+
+.cart__card--deleteIcon {
+  font-size: 1.5rem;
+}
+.cart__card--deleteIcon:hover {
+  cursor: pointer;
+  color: orangered;
+}
+
+.cart__card--changeCount {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.decrement,
+.increment {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  background-color: #4f709c;
+}

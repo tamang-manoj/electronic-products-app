@@ -4,3 +4,9 @@ wrapper background GRAY: #e8e8e8
 
 dark-blue: #213555
 lighter-blue: #4F709C
+
+yellow: #e5d283
+
+regex:
+characters limitation: ^.{1,830}$
+numbers only: ^[0-9]+$

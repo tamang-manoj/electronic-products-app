@@ -1,5 +1,6 @@
 import CardComponent from "./CardComponent";
 import { useAppSelector } from "../../app/hooks";
+import Loading from "../cart/Loading";
 
 const ProductsPage = () => {
   const products = useAppSelector((state) => state.products);
@@ -11,9 +12,7 @@ const ProductsPage = () => {
   return (
     <>
       {isLoading ? (
-        <div className="empty-product">
-          <h1>Loading...</h1>
-        </div>
+        <Loading />
       ) : data.length !== 0 ? (
         <div className="card-container">
           {data.map((product) => (
