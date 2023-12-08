@@ -98,7 +98,7 @@ const PopupCard = ({
   };
 
   const handleEdit = () => {
-    navigate(`/products/edit/${product.id}`);
+    navigate(`/edit-product/${product.id}`);
   };
 
   if (!open) {

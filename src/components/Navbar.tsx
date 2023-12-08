@@ -6,9 +6,6 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { charToSelect } from "../features/character/characterSlice";
 
 const Navbar = () => {
-  // const products = useAppSelector((state) => state.products.data);
-  // const productsCount = products.length;
-
   const cartProducts = useAppSelector((state) => state.cartProducts.data);
   const cartProductsCount = cartProducts.length;
 
@@ -36,27 +33,35 @@ const Navbar = () => {
 
         <div className="navbar__nonHeader">
           <div className="navbar__icon">
-            {loggedInRole === "user" && loggedIn ? (
+            {!loggedIn ? (
               <div
                 className="navbar__cart"
                 onClick={() => {
-                  loggedIn ? navigate("/cart") : navigate("/login");
+                  navigate("/login");
+                }}
+              >
+                <GrCart />
+              </div>
+            ) : loggedInRole === "user" ? (
+              <div
+                className="navbar__cart"
+                onClick={() => {
+                  navigate("/cart");
                 }}
               >
                 <GrCart />
                 <span className="icon__badge">{cartProductsCount}</span>
               </div>
-            ) : loggedInRole === "admin" ? (
+            ) : (
               <div
                 className="navbar__cart"
                 onClick={() => {
-                  navigate("/products/addProduct");
+                  navigate("/add-product");
                 }}
               >
                 <IoMdAddCircleOutline />
-                {/* <span className="icon__badge">{productsCount}</span> */}
               </div>
-            ) : null}
+            )}
           </div>
 
           {loggedIn ? (

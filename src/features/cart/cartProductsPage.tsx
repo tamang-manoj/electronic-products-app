@@ -1,11 +1,19 @@
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CartComponent from "./CartComponent";
 import Loading from "./Loading";
+import { getCartData } from "./cartSlice";
+import { useEffect } from "react";
 
 const CartProductsPage = () => {
   const cartProductsAll = useAppSelector((state) => state.cartProducts);
   const cartProducts = cartProductsAll.data;
   const isLoading = cartProductsAll.loading;
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getCartData());
+  }, []);
 
   return (
     <>
