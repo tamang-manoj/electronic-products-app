@@ -88,14 +88,19 @@ export function EditProduct() {
     );
 
     if (productName && productCategory && productPrice && productAvailable) {
-      if (imgFile) {
-        // deleting image first
-        const deleteRef = ref(storage, `/images/${prevProductImgId}`);
-        deleteObject(deleteRef);
+      setLoadingOnEdit(true);
 
-        // uploading new image and then downloading new image
-        uploadBytes(ref(storage, `/images/${prevProductImgId}`), imgFile).then(
-          () => {
+      if (imgFile) {
+        if (prevImgUrl !== "") {
+          // deleting image first
+          const deleteRef = ref(storage, `/images/${prevProductImgId}`);
+          deleteObject(deleteRef);
+
+          // uploading new image and then downloading new image
+          uploadBytes(
+            ref(storage, `/images/${prevProductImgId}`),
+            imgFile
+          ).then(() => {
             getDownloadURL(ref(storage, `/images/${prevProductImgId}`)).then(
               (url) =>
                 dispatch(
@@ -107,12 +112,39 @@ export function EditProduct() {
                     imgUrl: url,
                     productPrice,
                     productAvailable,
+                    productDescription,
                   })
-                ).then(() => navigate("/"))
+                ).then(() => {
+                  setLoadingOnEdit(false);
+                  navigate("/");
+                })
             );
-          }
-        );
-      } else {
+          });
+        } else if (prevImgUrl === "") {
+          uploadBytes(ref(storage, `/images/${newProductImgId}`), imgFile).then(
+            () => {
+              getDownloadURL(ref(storage, `/images/${newProductImgId}`)).then(
+                (url) =>
+                  dispatch(
+                    editProduct({
+                      id: prevId,
+                      productImgId: newProductImgId,
+                      productName,
+                      productCategory,
+                      imgUrl: url,
+                      productPrice,
+                      productAvailable,
+                      productDescription,
+                    })
+                  ).then(() => {
+                    setLoadingOnEdit(false);
+                    navigate("/");
+                  })
+              );
+            }
+          );
+        }
+      } else if (imgShow === "") {
         dispatch(
           editProduct({
             id: prevId,
@@ -122,10 +154,13 @@ export function EditProduct() {
             imgUrl: prevImgUrl,
             productPrice,
             productAvailable,
+            productDescription,
           })
-        ).then(() => navigate("/"));
+        ).then(() => {
+          setLoadingOnEdit(false);
+          navigate("/");
+        });
       }
-
       setDisableButton(true);
     }
   };
