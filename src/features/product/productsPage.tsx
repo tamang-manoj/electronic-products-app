@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Loading from "../cart/Loading";
 import { useEffect } from "react";
 import { getProducts } from "./productsSlice";
+import { getCartData } from "../cart/cartSlice";
 
 const ProductsPage = () => {
   const products = useAppSelector((state) => state.products);
@@ -15,6 +16,7 @@ const ProductsPage = () => {
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getCartData());
   }, []);
 
   return (

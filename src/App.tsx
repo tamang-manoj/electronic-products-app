@@ -6,8 +6,12 @@ import { EditProduct } from "./features/product/EditProduct";
 import Navbar from "./components/Navbar";
 import CartProductsPage from "./features/cart/cartProductsPage";
 import Login from "./features/character/Login";
-import Protected from "./components/Protected";
 
+import ErrorPage from "./components/ErrorPage";
+import ProtectedUser from "./components/ProtectedUser";
+import ProtectedAdmin from "./components/ProtectedAdmin";
+
+ProtectedAdmin;
 function App() {
   return (
     <>
@@ -17,11 +21,16 @@ function App() {
           <Route path="/" element={<ProductsPage />} />
           <Route path="/login" element={<Login />} />
 
-          <Route element={<Protected />}>
-            <Route path="/add-product" element={<AddProduct />} />
-            <Route path="/edit-product/:idInParam" element={<EditProduct />} />
+          <Route element={<ProtectedUser />}>
             <Route path="/cart" element={<CartProductsPage />} />
           </Route>
+
+          <Route element={<ProtectedAdmin />}>
+            <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/edit-product/:idInParam" element={<EditProduct />} />
+          </Route>
+
+          <Route path={"*"} element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
     </>

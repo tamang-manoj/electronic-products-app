@@ -9,17 +9,38 @@ const Navbar = () => {
   const cartProducts = useAppSelector((state) => state.cartProducts.data);
   const cartProductsCount = cartProducts.length;
 
-  const characters = useAppSelector((state) => state.characters);
-  const loggedIn = characters?.loggedIn;
-  const loggedInRole = characters.loggedInRole;
+  // const characters = useAppSelector((state) => state.characters);
+  // const loggedIn = characters?.loggedIn;
+  // const loggedInRole = characters.loggedInRole;
+
+  // const value = getPersistData();
+  // let persistedLog;
+  // if (value) {
+  //   persistedLog = JSON.parse(value);
+  // }
+  // console.log(persistedLog);
+
+  // { loggedIn: true, loggedInRole: foundCharacter.role }
+
+  const value = localStorage.getItem("persist_login");
+  let persistedLog;
+  if (value) {
+    persistedLog = JSON.parse(value);
+  }
+  // console.log(persistedLog);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(charToSelect({ loggedIn: false, loggedInRole: "user" }));
+    localStorage.setItem(
+      "persist_login",
+      JSON.stringify({ loggedIn: false, loggedInRole: "user" })
+    );
     navigate("/");
   };
+
   const handleLogin = () => {
     navigate("/login");
   };
@@ -33,7 +54,7 @@ const Navbar = () => {
 
         <div className="navbar__nonHeader">
           <div className="navbar__icon">
-            {!loggedIn ? (
+            {!persistedLog.loggedIn ? (
               <div
                 className="navbar__cart"
                 onClick={() => {
@@ -42,7 +63,8 @@ const Navbar = () => {
               >
                 <GrCart />
               </div>
-            ) : loggedInRole === "user" ? (
+            ) : persistedLog.loggedIn === true &&
+              persistedLog.loggedInRole === "user" ? (
               <div
                 className="navbar__cart"
                 onClick={() => {
@@ -64,7 +86,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {loggedIn ? (
+          {persistedLog.loggedIn ? (
             <button onClick={handleLogout}>Logout</button>
           ) : (
             <button onClick={handleLogin}>Login</button>

@@ -26,6 +26,12 @@ function Login() {
         dispatch(
           charToSelect({ loggedIn: true, loggedInRole: foundCharacter.role })
         );
+
+        localStorage.setItem(
+          "persist_login",
+          JSON.stringify({ loggedIn: true, loggedInRole: foundCharacter.role })
+        );
+
         navigate("/");
       } else {
         alert("Email not found!");
