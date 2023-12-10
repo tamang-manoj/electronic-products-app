@@ -64,14 +64,19 @@ const PopupCard = ({
     if (isItemInCart) {
       dispatch(deleteFromCart(isItemInCart.cartItemId));
     }
-    const deleteRef = ref(storage, `/images/${product.productImgId}`);
-    deleteObject(deleteRef)
-      .then(() => {
-        // console.log("image deleted from storage");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+
+    if (product.imgUrl) {
+      // console.log(product.imgUrl);
+
+      const deleteRef = ref(storage, `/images/${product.productImgId}`);
+      deleteObject(deleteRef);
+      // .then(() => {
+      //   console.log("image deleted from storage");
+      // })
+      // .catch((error) => {
+      //   console.log(error.message);
+      // });
+    }
   };
 
   const handleAddToCart = (productToAdd: CartState) => {
