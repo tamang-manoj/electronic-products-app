@@ -3,41 +3,27 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { charToSelect } from "../features/character/characterSlice";
+import { setCharInfo } from "../features/character/characterSlice";
 
 const Navbar = () => {
   const cartProducts = useAppSelector((state) => state.cartProducts.data);
   const cartProductsCount = cartProducts.length;
 
-  // const characters = useAppSelector((state) => state.characters);
-  // const loggedIn = characters?.loggedIn;
-  // const loggedInRole = characters.loggedInRole;
+  const charStatus = useAppSelector((state) => state.characters.status);
 
-  // const value = getPersistData();
+  // const value = localStorage.getItem("persist_login");
   // let persistedLog;
   // if (value) {
   //   persistedLog = JSON.parse(value);
   // }
-  // console.log(persistedLog);
-
-  // { loggedIn: true, loggedInRole: foundCharacter.role }
-
-  const value = localStorage.getItem("persist_login");
-  let persistedLog;
-  if (value) {
-    persistedLog = JSON.parse(value);
-  }
-  // console.log(persistedLog);
+  // // console.log(persistedLog);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(charToSelect({ loggedIn: false, loggedInRole: "user" }));
-    localStorage.setItem(
-      "persist_login",
-      JSON.stringify({ loggedIn: false, loggedInRole: "user" })
-    );
+    dispatch(setCharInfo({ isLoggedIn: false, role: "user" }));
+    localStorage.removeItem("persist_login");
     navigate("/");
   };
 
@@ -54,17 +40,7 @@ const Navbar = () => {
 
         <div className="navbar__nonHeader">
           <div className="navbar__icon">
-            {!persistedLog.loggedIn ? (
-              <div
-                className="navbar__cart"
-                onClick={() => {
-                  navigate("/login");
-                }}
-              >
-                <GrCart />
-              </div>
-            ) : persistedLog.loggedIn === true &&
-              persistedLog.loggedInRole === "user" ? (
+            {charStatus.isLoggedIn && charStatus.role === "user" ? (
               <div
                 className="navbar__cart"
                 onClick={() => {
@@ -74,7 +50,7 @@ const Navbar = () => {
                 <GrCart />
                 <span className="icon__badge">{cartProductsCount}</span>
               </div>
-            ) : (
+            ) : charStatus.isLoggedIn && charStatus.role === "admin" ? (
               <div
                 className="navbar__cart"
                 onClick={() => {
@@ -83,10 +59,19 @@ const Navbar = () => {
               >
                 <IoMdAddCircleOutline />
               </div>
+            ) : (
+              <div
+                className="navbar__cart"
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                <GrCart />
+              </div>
             )}
           </div>
 
-          {persistedLog.loggedIn ? (
+          {charStatus.isLoggedIn ? (
             <button onClick={handleLogout}>Logout</button>
           ) : (
             <button onClick={handleLogin}>Login</button>

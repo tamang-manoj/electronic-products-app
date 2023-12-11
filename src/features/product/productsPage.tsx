@@ -4,15 +4,15 @@ import Loading from "../cart/Loading";
 import { useEffect } from "react";
 import { getProducts } from "./productsSlice";
 import { getCartData } from "../cart/cartSlice";
+// import { setCharInfo } from "../character/characterSlice";
 
 const ProductsPage = () => {
+  const dispatch = useAppDispatch();
   const products = useAppSelector((state) => state.products);
   // console.log(products.data);
   const data = products.data;
   // console.log(data);
   const isLoading = products.isLoading;
-
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getProducts());

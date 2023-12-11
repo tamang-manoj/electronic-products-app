@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { deleteFromCart } from "./cartSlice";
 import { updateProductCount } from "./cartSlice";
 import { useAppSelector } from "../../app/hooks";
-import image from "../../../public/no_image.jpg";
+import image from "/no_image.jpg";
 
 const CartComponent = ({ cartProduct }: any) => {
   const dispatch = useDispatch();
