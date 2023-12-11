@@ -4,10 +4,15 @@ export interface CharInfo {
   email: string;
   role: "admin" | "user";
 }
+
+export interface Status {
+  isLoggedIn: boolean;
+  role: "admin" | "user";
+}
+
 export interface CharacterState {
   charArray: CharInfo[];
-  loggedIn: boolean;
-  loggedInRole: "admin" | "user";
+  status: Status;
 }
 
 const initialState: CharacterState = {
@@ -21,22 +26,20 @@ const initialState: CharacterState = {
       role: "admin",
     },
   ],
-  loggedIn: false,
-  loggedInRole: "user",
+  status: { isLoggedIn: false, role: "user" },
 };
 
 export const characterSlice = createSlice({
   name: "characters",
   initialState,
   reducers: {
-    charToSelect: (state, action) => {
-      state.charArray = state.charArray;
-      state.loggedIn = action.payload.loggedIn;
-      state.loggedInRole = action.payload.loggedInRole;
+    setCharInfo: (state, action) => {
+      state.status.isLoggedIn = action.payload?.isLoggedIn;
+      state.status.role = action.payload?.role;
     },
   },
 });
 
-export const { charToSelect } = characterSlice.actions;
+export const { setCharInfo } = characterSlice.actions;
 
 export default characterSlice.reducer;

@@ -16,7 +16,7 @@ import {
   updateProductCount,
 } from "../cart/cartSlice";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import image from "../../../public/no_image.jpg";
+import image from "/no_image.jpg";
 
 const PopupCard = ({
   open,
@@ -40,16 +40,13 @@ const PopupCard = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  // const characters = useAppSelector((state) => state.characters);
-  // const loggedIn = characters.loggedIn;
-  // const loggedInRole = characters.loggedInRole;
+  const status = useAppSelector((state) => state.characters.status);
 
-  const value = localStorage.getItem("persist_login");
-  let persistedLog: any;
-  if (value) {
-    persistedLog = JSON.parse(value);
-  }
-  // console.log(persistedLog);
+  // const value = localStorage.getItem("persist_login");
+  // let persistedLog: any;
+  // if (value) {
+  //   persistedLog = JSON.parse(value);
+  // }
 
   const cartProducts = useAppSelector((state) => state?.cartProducts.data);
 
@@ -81,7 +78,7 @@ const PopupCard = ({
   };
 
   const handleAddToCart = (productToAdd: CartState) => {
-    if (persistedLog.loggedIn && persistedLog.loggedInRole === "user") {
+    if (status.isLoggedIn && status.role === "user") {
       const productAlreadyInCart = cartProducts.find(
         (cartProduct) => cartProduct.productId === productToAdd.productId
       );
@@ -143,7 +140,7 @@ const PopupCard = ({
 
               <div className="countAndIconSection">
                 <div>
-                  {persistedLog.loggedInRole === "user" ? (
+                  {status.role === "user" ? (
                     <div className="popup__card--footer">
                       <div>
                         Quantity{" "}

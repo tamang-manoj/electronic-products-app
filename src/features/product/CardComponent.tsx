@@ -1,7 +1,7 @@
 import { DataState } from "./productsSlice";
 import { useState } from "react";
 import PopupCard from "./PopupCard";
-import image from "../../../public/no_image.jpg";
+import image from "/no_image.jpg";
 
 type ProductProp = {
   product: DataState;

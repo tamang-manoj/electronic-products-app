@@ -1,15 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router";
-import { charToSelect } from "./characterSlice";
+import { setCharInfo } from "./characterSlice";
 
 function Login() {
   const [email, setEmail] = useState("@gmail.com");
 
   const characters = useAppSelector((state) => state.characters);
   const charArray = characters.charArray;
-  // const loggedIn = characters.loggedIn;
-  // const loggedInCharacter = characters.loggedInCharacter;
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -23,26 +21,37 @@ function Login() {
       );
 
       if (foundCharacter) {
-        dispatch(
-          charToSelect({ loggedIn: true, loggedInRole: foundCharacter.role })
-        );
-
         localStorage.setItem(
           "persist_login",
-          JSON.stringify({ loggedIn: true, loggedInRole: foundCharacter.role })
+          JSON.stringify({ isLoggedIn: true, role: foundCharacter.role })
         );
+
+        const value = localStorage.getItem("persist_login");
+        let persistedLog;
+        if (value) {
+          persistedLog = JSON.parse(value);
+        }
+
+        dispatch(setCharInfo(persistedLog));
 
         navigate("/");
       } else {
         alert("Email not found!");
       }
     }
-
-    // if (role) {
-    //   dispatch(selectedRole({ role: role, loggedIn: true }));
-    //   navigate("/");
-    // }
   };
+
+  const value = localStorage.getItem("persist_login");
+  let persistedLog: any;
+  if (value) {
+    persistedLog = JSON.parse(value);
+  }
+  const isLoggedIn = persistedLog?.isLoggedIn;
+  const role = persistedLog?.role;
+
+  useEffect(() => {
+    dispatch(setCharInfo({ isLoggedIn, role }));
+  }, [isLoggedIn, role, dispatch]);
 
   return (
     <div className="form__container">
