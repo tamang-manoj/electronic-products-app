@@ -15,7 +15,7 @@ import {
   deleteFromCart,
   updateProductCount,
 } from "../cart/cartSlice";
-import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import ConfirmDeleteModal from "./ConfirmDeletePopup";
 import image from "/no_image.jpg";
 
 const PopupCard = ({
