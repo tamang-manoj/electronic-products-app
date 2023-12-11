@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { addProduct } from "./productsSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -34,6 +34,8 @@ export function AddProduct() {
     price: "",
     available: "",
   });
+
+  useEffect(() => {}, []);
 
   const productImgId = uuidv4();
 
