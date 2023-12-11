@@ -36,9 +36,14 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCartData.fulfilled, (state: any, action) => {
-      state.data = action.payload;
-    });
+    builder
+      .addCase(getCartData.fulfilled, (state: any, action) => {
+        state.data = action.payload;
+        state.loading = false;
+      })
+      .addCase(getCartData.pending, (state) => {
+        state.loading = true;
+      });
 
     builder.addCase(updateProductCount.pending, (state) => {
       state.loading = true;

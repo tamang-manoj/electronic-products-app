@@ -17,6 +17,7 @@ import {
 } from "../cart/cartSlice";
 import ConfirmDeleteModal from "./ConfirmDeletePopup";
 import image from "/no_image.jpg";
+import Loading from "../cart/Loading";
 
 const PopupCard = ({
   open,
@@ -30,9 +31,7 @@ const PopupCard = ({
   const [count, setCount] = useState(1);
 
   const [deleteModal, setDeleteModal] = useState(false);
-  // const showDeleteModal = () => {
-  //   setDeleteModal(true);
-  // };
+
   const closeDeleteModal = () => {
     setDeleteModal(false);
   };
@@ -42,13 +41,9 @@ const PopupCard = ({
 
   const status = useAppSelector((state) => state.characters.status);
 
-  // const value = localStorage.getItem("persist_login");
-  // let persistedLog: any;
-  // if (value) {
-  //   persistedLog = JSON.parse(value);
-  // }
-
-  const cartProducts = useAppSelector((state) => state?.cartProducts.data);
+  const cartProductsAll = useAppSelector((state) => state?.cartProducts);
+  const cartProducts = cartProductsAll.data;
+  const isLoading = cartProductsAll.loading;
 
   const handleProductDelete = (product: DataState) => {
     if (product.id) {
@@ -78,6 +73,8 @@ const PopupCard = ({
   };
 
   const handleAddToCart = (productToAdd: CartState) => {
+    handleCardClose();
+
     if (status.isLoggedIn && status.role === "user") {
       const productAlreadyInCart = cartProducts.find(
         (cartProduct) => cartProduct.productId === productToAdd.productId
@@ -112,101 +109,105 @@ const PopupCard = ({
   return (
     <>
       <div className="popup__wrapper">
-        <div className="popup__card">
-          <div className="popup__elements">
-            <div>
-              {product.imgUrl ? (
-                <img src={product.imgUrl} />
-              ) : (
-                <img src={image} alt="no image" />
-              )}
-            </div>
-
-            <div className="popup__card--info">
-              <p className="popup__heading">{product.productName}</p>
-              <p className="popup__category">
-                Category: {product.productCategory}
-              </p>
-
-              <hr />
-
-              <div className="popup__description">
-                Description: {product.productDescription}
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div className="popup__card">
+            <div className="popup__elements">
+              <div>
+                {product.imgUrl ? (
+                  <img src={product.imgUrl} />
+                ) : (
+                  <img src={image} alt="no image" />
+                )}
               </div>
 
-              <hr />
+              <div className="popup__card--info">
+                <p className="popup__heading">{product.productName}</p>
+                <p className="popup__category">
+                  Category: {product.productCategory}
+                </p>
 
-              <h1 className="popup__price">Rs. {product.productPrice}</h1>
+                <hr />
 
-              <div className="countAndIconSection">
-                <div>
-                  {status.role === "user" ? (
-                    <div className="popup__card--footer">
-                      <div>
-                        Quantity{" "}
-                        <button
-                          className="popup__card--countButton"
-                          onClick={() => setCount((count) => count - 1)}
-                          disabled={count <= 1}
+                <div className="popup__description">
+                  Description: {product.productDescription}
+                </div>
+
+                <hr />
+
+                <h1 className="popup__price">Rs. {product.productPrice}</h1>
+
+                <div className="countAndIconSection">
+                  <div>
+                    {status.role === "user" ? (
+                      <div className="popup__card--footer">
+                        <div>
+                          Quantity{" "}
+                          <button
+                            className="popup__card--countButton"
+                            onClick={() => setCount((count) => count - 1)}
+                            disabled={count <= 1}
+                          >
+                            -
+                          </button>
+                          <span>{count}</span>
+                          <button
+                            className="popup__card--countButton"
+                            onClick={() => setCount((count) => count + 1)}
+                            disabled={count === 5}
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <div
+                          className="popup__card--cartIcon"
+                          onClick={() =>
+                            handleAddToCart({
+                              imgUrl: product.imgUrl,
+                              productName: product.productName,
+                              productCategory: product.productCategory,
+                              productAvailable: product.productAvailable,
+                              productPrice: product.productPrice,
+                              productImgId: product.productImgId,
+                              count: count,
+                              productId: product.id,
+                            })
+                          }
                         >
-                          -
-                        </button>
-                        <span>{count}</span>
-                        <button
-                          className="popup__card--countButton"
-                          onClick={() => setCount((count) => count + 1)}
-                          // disabled={count === 5}
+                          <BsCart3 />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="popup__card--footer">
+                        <div
+                          className="popup__card--cartIcon"
+                          onClick={handleEdit}
                         >
-                          +
-                        </button>
-                      </div>
+                          <FaRegEdit />
+                        </div>
 
-                      <div
-                        className="popup__card--cartIcon"
-                        onClick={() =>
-                          handleAddToCart({
-                            imgUrl: product.imgUrl,
-                            productName: product.productName,
-                            productCategory: product.productCategory,
-                            productAvailable: product.productAvailable,
-                            productPrice: product.productPrice,
-                            productImgId: product.productImgId,
-                            count: count,
-                            productId: product.id,
-                          })
-                        }
-                      >
-                        <BsCart3 />
+                        <div
+                          className="popup__card--cartIcon"
+                          onClick={() => {
+                            setDeleteModal(true);
+                          }}
+                        >
+                          <MdOutlineDelete />
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="popup__card--footer">
-                      <div
-                        className="popup__card--cartIcon"
-                        onClick={handleEdit}
-                      >
-                        <FaRegEdit />
-                      </div>
-
-                      <div
-                        className="popup__card--cartIcon"
-                        onClick={() => {
-                          setDeleteModal(true);
-                        }}
-                        // onClick={() => handleProductDelete(product)}
-                      >
-                        <MdOutlineDelete />
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
+            <button className="popup__closer" onClick={handleCardClose}>
+              X
+            </button>
           </div>
-          <button className="popup__closer" onClick={handleCardClose}>
-            X
-          </button>
-        </div>
+        )}
+
         {deleteModal && (
           <ConfirmDeleteModal
             product={product}
@@ -215,7 +216,6 @@ const PopupCard = ({
           />
         )}
       </div>
-      <div></div>
     </>
   );
 };
