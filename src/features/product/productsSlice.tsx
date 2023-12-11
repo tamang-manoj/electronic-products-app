@@ -88,17 +88,18 @@ export const editProduct = createAsyncThunk(
   async (editedProduct: any, thunkAPI) => {
     await updateDoc(doc(db, "products", editedProduct.id), editedProduct);
     thunkAPI.dispatch(getProducts());
-
     // console.log("edited product is: ", editedProduct);
 
     const { cartProducts }: any = thunkAPI.getState();
+    // console.log(cartProducts);
 
     const isEditProductInCart = cartProducts.data.find(
-      (cartProduct: CartState) =>
-        cartProduct.productImgId === editedProduct.productImgId
+      (cartProduct: CartState) => cartProduct.productId === editedProduct.id
     );
 
     if (isEditProductInCart) {
+      // console.log(isEditProductInCart);
+
       thunkAPI.dispatch(
         updateEditInCart({ isEditProductInCart, editedProduct })
       );

@@ -1,6 +1,7 @@
 import { DataState } from "./productsSlice";
 import { useState } from "react";
 import PopupCard from "./PopupCard";
+import image from "../../../public/no_image.jpg";
 
 type ProductProp = {
   product: DataState;
@@ -23,7 +24,11 @@ const CardComponent = ({ product }: ProductProp) => {
         title={product.productName}
       >
         <div className="image-container">
-          <img src={product.imgUrl} alt="No Image Available" />
+          {product.imgUrl ? (
+            <img src={product.imgUrl} />
+          ) : (
+            <img src={image} alt="no image" />
+          )}
         </div>
 
         <div className="card__description">

@@ -56,9 +56,7 @@ export function AddProduct() {
     }
   };
 
-  const handleSubmitProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const checkErrors = () => {
     setErrors(
       Validation({
         productName,
@@ -67,12 +65,18 @@ export function AddProduct() {
         productAvailable,
       })
     );
+  };
+
+  const handleSubmitProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     if (productName && productCategory && productPrice && productAvailable) {
-      setDisableButton(true);
       setLoadingOnAdd(true);
 
+      setDisableButton(true);
+
       if (imgFile) {
+        setLoadingOnAdd(true);
         uploadBytes(ref(storage, `/images/${productImgId}`), imgFile).then(
           () => {
             getDownloadURL(ref(storage, `/images/${productImgId}`)).then(
@@ -94,7 +98,9 @@ export function AddProduct() {
             );
           }
         );
+        // setLoadingOnAdd(false);
       } else {
+        setLoadingOnAdd(true);
         dispatch(
           addProduct({
             imgUrl: "",
@@ -111,6 +117,8 @@ export function AddProduct() {
         });
       }
     }
+    // setLoadingOnAdd(false);
+    setDisableButton(false);
   };
 
   return (
@@ -227,7 +235,11 @@ export function AddProduct() {
             </div>
 
             <div className="form__element">
-              <button type="submit" disabled={disableButton}>
+              <button
+                type="submit"
+                disabled={disableButton}
+                onClick={checkErrors}
+              >
                 Add
               </button>
             </div>

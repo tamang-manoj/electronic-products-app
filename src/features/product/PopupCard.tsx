@@ -16,6 +16,7 @@ import {
   updateProductCount,
 } from "../cart/cartSlice";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import image from "../../../public/no_image.jpg";
 
 const PopupCard = ({
   open,
@@ -82,7 +83,7 @@ const PopupCard = ({
   const handleAddToCart = (productToAdd: CartState) => {
     if (persistedLog.loggedIn && persistedLog.loggedInRole === "user") {
       const productAlreadyInCart = cartProducts.find(
-        (cartProduct) => cartProduct.productImgId === productToAdd.productImgId
+        (cartProduct) => cartProduct.productId === productToAdd.productId
       );
 
       if (productAlreadyInCart) {
@@ -117,11 +118,11 @@ const PopupCard = ({
         <div className="popup__card">
           <div className="popup__elements">
             <div>
-              <img
-                src={product.imgUrl}
-                alt="No Image Available"
-                className="popup__card--img"
-              />
+              {product.imgUrl ? (
+                <img src={product.imgUrl} />
+              ) : (
+                <img src={image} alt="no image" />
+              )}
             </div>
 
             <div className="popup__card--info">
@@ -174,6 +175,7 @@ const PopupCard = ({
                             productPrice: product.productPrice,
                             productImgId: product.productImgId,
                             count: count,
+                            productId: product.id,
                           })
                         }
                       >

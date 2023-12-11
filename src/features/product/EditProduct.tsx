@@ -53,7 +53,7 @@ export function EditProduct() {
 
   const prevImgUrl = product?.imgUrl;
   const [imgShow, setImgShow] = useState(prevImgUrl);
-  console.log(prevImgUrl);
+  // console.log(prevImgUrl);
   const [imgFile, setImgFile] = useState<File>();
 
   const handleDeleteImage = () => {
@@ -142,10 +142,10 @@ export function EditProduct() {
           dispatch(
             editProduct({
               id: prevId,
-              // productImgId: "",
+              productImgId: "",
               productName,
               productCategory,
-              // imgUrl: "",
+              imgUrl: "",
               productPrice,
               productAvailable,
             })
@@ -154,10 +154,10 @@ export function EditProduct() {
           dispatch(
             editProduct({
               id: prevId,
-              // productImgId: "",
+              productImgId: "",
               productName,
               productCategory,
-              // imgUrl: "",
+              imgUrl: "",
               productPrice,
               productAvailable,
             })
