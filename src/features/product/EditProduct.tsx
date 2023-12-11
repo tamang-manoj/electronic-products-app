@@ -56,12 +56,8 @@ export function EditProduct() {
   // console.log(prevImgUrl);
   const [imgFile, setImgFile] = useState<File>();
 
-  const handleDeleteImage = () => {
+  const handleSelectImage = () => {
     setImgFile(undefined);
-    // setImgShow("");
-
-    // const deleteRef = ref(storage, `/images/${prevProductImgId}`);
-    // deleteObject(deleteRef);
     setImgShow("");
   };
 
@@ -88,13 +84,14 @@ export function EditProduct() {
     );
 
     if (productName && productCategory && productPrice && productAvailable) {
+      setDisableButton(true);
+      setLoadingOnEdit(true);
+
       if (imgFile) {
         // deleting image first
-
         if (prevImgUrl) {
           const deleteRef = ref(storage, `/images/${prevProductImgId}`);
           deleteObject(deleteRef);
-
           // uploading new image and then downloading new image
           uploadBytes(ref(storage, `/images/${newProductImgId}`), imgFile).then(
             () => {
@@ -164,8 +161,8 @@ export function EditProduct() {
           ).then(() => navigate("/"));
         }
       }
-
-      setDisableButton(true);
+      setLoadingOnEdit(true);
+      setDisableButton(false);
     }
   };
 
@@ -221,13 +218,7 @@ export function EditProduct() {
                   {imgShow ? (
                     <>
                       <img src={imgShow} />
-                      <span
-                        onClick={(e) => {
-                          handleDeleteImage();
-                        }}
-                      >
-                        X
-                      </span>
+                      <span onClick={handleSelectImage}>X</span>
                     </>
                   ) : (
                     ""
