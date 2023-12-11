@@ -25,18 +25,16 @@ export function EditProduct() {
 
   const prevId = product?.id;
   const prevProductImgId = product?.productImgId;
-  const prevProductName = product?.productName;
-  const prevProductCategory = product?.productCategory;
-  const prevProductPrice = product?.productPrice;
-  const prevProductAvailable = product?.productAvailable;
-  const prevProductDescription = product?.productDescription;
-  const [productName, setProductName] = useState(prevProductName);
-  const [productCategory, setProductCategory] = useState(prevProductCategory);
-  const [productPrice, setProductPrice] = useState(prevProductPrice);
-  const [productAvailable, setProductAvailable] =
-    useState(prevProductAvailable);
+  const [productName, setProductName] = useState(product?.productName);
+  const [productCategory, setProductCategory] = useState(
+    product?.productCategory
+  );
+  const [productPrice, setProductPrice] = useState(product?.productPrice);
+  const [productAvailable, setProductAvailable] = useState(
+    product?.productAvailable
+  );
   const [productDescription, setProductDescription] = useState(
-    prevProductDescription
+    product?.productDescription
   );
 
   const [disableButton, setDisableButton] = useState(false);
