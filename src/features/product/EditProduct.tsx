@@ -27,24 +27,17 @@ export function EditProduct() {
   const prevProductImgId = product?.productImgId;
   const prevProductName = product?.productName;
   const prevProductCategory = product?.productCategory;
-  const prevImgUrl = product?.imgUrl;
-
-  // console.log(prevImgUrl);
-
   const prevProductPrice = product?.productPrice;
   const prevProductAvailable = product?.productAvailable;
   const prevProductDescription = product?.productDescription;
-
   const [productName, setProductName] = useState(prevProductName);
   const [productCategory, setProductCategory] = useState(prevProductCategory);
-  const [imgShow, setImgShow] = useState(prevImgUrl);
   const [productPrice, setProductPrice] = useState(prevProductPrice);
   const [productAvailable, setProductAvailable] =
     useState(prevProductAvailable);
   const [productDescription, setProductDescription] = useState(
     prevProductDescription
   );
-  const [imgFile, setImgFile] = useState<File>();
 
   const [disableButton, setDisableButton] = useState(false);
 
@@ -54,16 +47,19 @@ export function EditProduct() {
     price: "",
     available: "",
   });
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const newProductImgId = uuidv4();
 
-  // const handleCancelImage = () => {
-  //   setImgFile(undefined);
-  //   setImgShow("");
-  // };
+  const prevImgUrl = product?.imgUrl;
+  const [imgShow, setImgShow] = useState(prevImgUrl);
+  // console.log(prevImgUrl);
+  const [imgFile, setImgFile] = useState<File>();
+
+  const handleSelectImage = () => {
+    setImgFile(undefined);
+    setImgShow("");
+  };
 
   const handleEditImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     // console.log(e.target.files);
@@ -88,39 +84,15 @@ export function EditProduct() {
     );
 
     if (productName && productCategory && productPrice && productAvailable) {
+      setDisableButton(true);
       setLoadingOnEdit(true);
 
       if (imgFile) {
-        if (prevImgUrl !== "") {
-          // deleting image first
+        // deleting image first
+        if (prevImgUrl) {
           const deleteRef = ref(storage, `/images/${prevProductImgId}`);
           deleteObject(deleteRef);
-
           // uploading new image and then downloading new image
-          uploadBytes(
-            ref(storage, `/images/${prevProductImgId}`),
-            imgFile
-          ).then(() => {
-            getDownloadURL(ref(storage, `/images/${prevProductImgId}`)).then(
-              (url) =>
-                dispatch(
-                  editProduct({
-                    id: prevId,
-                    productImgId: prevProductImgId,
-                    productName,
-                    productCategory,
-                    imgUrl: url,
-                    productPrice,
-                    productAvailable,
-                    productDescription,
-                  })
-                ).then(() => {
-                  setLoadingOnEdit(false);
-                  navigate("/");
-                })
-            );
-          });
-        } else if (prevImgUrl === "") {
           uploadBytes(ref(storage, `/images/${newProductImgId}`), imgFile).then(
             () => {
               getDownloadURL(ref(storage, `/images/${newProductImgId}`)).then(
@@ -134,34 +106,63 @@ export function EditProduct() {
                       imgUrl: url,
                       productPrice,
                       productAvailable,
-                      productDescription,
                     })
-                  ).then(() => {
-                    setLoadingOnEdit(false);
-                    navigate("/");
-                  })
+                  ).then(() => navigate("/"))
+              );
+            }
+          );
+        } else {
+          uploadBytes(ref(storage, `/images/${newProductImgId}`), imgFile).then(
+            () => {
+              getDownloadURL(ref(storage, `/images/${newProductImgId}`)).then(
+                (url) =>
+                  dispatch(
+                    editProduct({
+                      id: prevId,
+                      productImgId: newProductImgId,
+                      productName,
+                      productCategory,
+                      imgUrl: url,
+                      productPrice,
+                      productAvailable,
+                    })
+                  ).then(() => navigate("/"))
               );
             }
           );
         }
-      } else if (imgShow === "") {
-        dispatch(
-          editProduct({
-            id: prevId,
-            productImgId: prevProductImgId,
-            productName,
-            productCategory,
-            imgUrl: prevImgUrl,
-            productPrice,
-            productAvailable,
-            productDescription,
-          })
-        ).then(() => {
-          setLoadingOnEdit(false);
-          navigate("/");
-        });
+      } else if (!imgFile) {
+        if (prevImgUrl) {
+          const deleteRef = ref(storage, `/images/${prevProductImgId}`);
+          deleteObject(deleteRef);
+
+          dispatch(
+            editProduct({
+              id: prevId,
+              productImgId: "",
+              productName,
+              productCategory,
+              imgUrl: "",
+              productPrice,
+              productAvailable,
+            })
+          ).then(() => navigate("/"));
+        } else {
+          dispatch(
+            editProduct({
+              id: prevId,
+              productImgId: "",
+              productName,
+              productCategory,
+              imgUrl: "",
+              productPrice,
+              productAvailable,
+            })
+          ).then(() => navigate("/"));
+        }
       }
-      setDisableButton(true);
+      setLoadingOnEdit(true);
+      setDisableButton(false);
     }
   };
 
@@ -217,13 +218,7 @@ export function EditProduct() {
                   {imgShow ? (
                     <>
                       <img src={imgShow} />
-                      {/* <span
-                        onClick={(e) => {
-                          handleCancelImage();
-                        }}
-                      >
-                        X
-                      </span> */}
+                      <span onClick={handleSelectImage}>X</span>
                     </>
                   ) : (
                     ""

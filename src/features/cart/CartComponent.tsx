@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { deleteFromCart } from "./cartSlice";
 import { updateProductCount } from "./cartSlice";
 import { useAppSelector } from "../../app/hooks";
+import image from "../../../public/no_image.jpg";
 
 const CartComponent = ({ cartProduct }: any) => {
   const dispatch = useDispatch();
@@ -42,7 +43,11 @@ const CartComponent = ({ cartProduct }: any) => {
     <>
       <div className="cart__product--card">
         <div className="cartImage__container">
-          <img src={`${cartProduct.imgUrl}`} alt="cartProduct-image" />
+          {cartProduct.imgUrl ? (
+            <img src={`${cartProduct.imgUrl}`} />
+          ) : (
+            <img src={image} alt="no image" />
+          )}
         </div>
 
         <div className="info__section">
@@ -51,7 +56,7 @@ const CartComponent = ({ cartProduct }: any) => {
             {cartProduct.productCategory}
           </div>
           <div className="cart__card--available">
-            {cartProduct.productAvailable} item(s) left
+            {cartProduct.productAvailable} item
           </div>
         </div>
 

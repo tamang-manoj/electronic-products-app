@@ -1,32 +1,52 @@
-import { useDispatch } from "react-redux";
-import { addProduct } from "./productsSlice";
+import { editProduct } from "./productsSlice";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { storage } from "../../firebase";
 import Loading from "../cart/Loading";
+import { ErrorType } from "./AddProduct";
 import Validation from "../../components/Validation";
+import { v4 as uuidv4 } from "uuid";
 
-export interface ErrorType {
-  name?: string;
-  category?: string;
-  price?: string;
-  available?: string;
-}
+export function EditProduct() {
+  const [loadingOnEdit, setLoadingOnEdit] = useState(false);
 
-export function AddProduct() {
-  const [loadingOnAdd, setLoadingOnAdd] = useState(false);
+  const { idInParam } = useParams();
 
-  const [productName, setProductName] = useState<string>("");
-  const [productCategory, setProductCategory] = useState<string>("");
+  const product = useAppSelector((state) => {
+    return state.products.data.find((product) => product.id === idInParam);
+  });
+
+  const prevId = product?.id;
+  const prevProductImgId = product?.productImgId;
+  const prevProductName = product?.productName;
+  const prevProductCategory = product?.productCategory;
+  const prevImgUrl = product?.imgUrl;
+
+  // console.log(prevImgUrl);
+
+  const prevProductPrice = product?.productPrice;
+  const prevProductAvailable = product?.productAvailable;
+  const prevProductDescription = product?.productDescription;
+
+  const [productName, setProductName] = useState(prevProductName);
+  const [productCategory, setProductCategory] = useState(prevProductCategory);
+  const [imgShow, setImgShow] = useState(prevImgUrl);
+  const [productPrice, setProductPrice] = useState(prevProductPrice);
+  const [productAvailable, setProductAvailable] =
+    useState(prevProductAvailable);
+  const [productDescription, setProductDescription] = useState(
+    prevProductDescription
+  );
   const [imgFile, setImgFile] = useState<File>();
-  const [productPrice, setProductPrice] = useState<string>("");
-  const [productAvailable, setProductAvailable] = useState<string>("");
-  const [imgShow, setImgShow] = useState<string>("");
-  const [productDescription, setProductDescription] = useState("");
 
-  const [disableButton, setDisableButton] = useState<boolean>(false);
+  const [disableButton, setDisableButton] = useState(false);
 
   const [errors, setErrors] = useState<ErrorType>({
     name: "",
@@ -35,28 +55,29 @@ export function AddProduct() {
     available: "",
   });
 
-  const productImgId = uuidv4();
-
-  const dispatch = useDispatch();
-
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleCancelImage = () => {
-    setImgFile(undefined);
-    setImgShow("");
-  };
+  const newProductImgId = uuidv4();
 
-  const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleCancelImage = () => {
+  //   setImgFile(undefined);
+  //   setImgShow("");
+  // };
+
+  const handleEditImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     // console.log(e.target.files);
-    if (e.target.files) {
-      if (e.target.files.length !== 0) {
+    if (e?.target.files) {
+      if (e.target.files[0]) {
         setImgFile(e.target.files[0]);
         setImgShow(URL.createObjectURL(e.target.files[0]));
       }
     }
   };
 
-  const checkErrors = () => {
+  const handleSubmitEditProduct = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     setErrors(
       Validation({
         productName,
@@ -65,73 +86,96 @@ export function AddProduct() {
         productAvailable,
       })
     );
-  };
-
-  const handleSubmitProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
     if (productName && productCategory && productPrice && productAvailable) {
-      setLoadingOnAdd(true);
-
-      setDisableButton(true);
+      setLoadingOnEdit(true);
 
       if (imgFile) {
-        setLoadingOnAdd(true);
-        uploadBytes(ref(storage, `/images/${productImgId}`), imgFile).then(
-          () => {
-            getDownloadURL(ref(storage, `/images/${productImgId}`)).then(
+        if (prevImgUrl !== "") {
+          // deleting image first
+          const deleteRef = ref(storage, `/images/${prevProductImgId}`);
+          deleteObject(deleteRef);
+
+          // uploading new image and then downloading new image
+          uploadBytes(
+            ref(storage, `/images/${prevProductImgId}`),
+            imgFile
+          ).then(() => {
+            getDownloadURL(ref(storage, `/images/${prevProductImgId}`)).then(
               (url) =>
                 dispatch(
-                  addProduct({
-                    imgUrl: url,
-                    productImgId,
+                  editProduct({
+                    id: prevId,
+                    productImgId: prevProductImgId,
                     productName,
                     productCategory,
-                    productPrice: productPrice.replace(/^0+/, ""),
+                    imgUrl: url,
+                    productPrice,
                     productAvailable,
                     productDescription,
                   })
                 ).then(() => {
-                  setLoadingOnAdd(false);
+                  setLoadingOnEdit(false);
                   navigate("/");
                 })
             );
-          }
-        );
-        // setLoadingOnAdd(false);
-      } else {
-        setLoadingOnAdd(true);
+          });
+        } else if (prevImgUrl === "") {
+          uploadBytes(ref(storage, `/images/${newProductImgId}`), imgFile).then(
+            () => {
+              getDownloadURL(ref(storage, `/images/${newProductImgId}`)).then(
+                (url) =>
+                  dispatch(
+                    editProduct({
+                      id: prevId,
+                      productImgId: newProductImgId,
+                      productName,
+                      productCategory,
+                      imgUrl: url,
+                      productPrice,
+                      productAvailable,
+                      productDescription,
+                    })
+                  ).then(() => {
+                    setLoadingOnEdit(false);
+                    navigate("/");
+                  })
+              );
+            }
+          );
+        }
+      } else if (imgShow === "") {
         dispatch(
-          addProduct({
-            imgUrl: "",
-            productImgId,
+          editProduct({
+            id: prevId,
+            productImgId: prevProductImgId,
             productName,
             productCategory,
-            productPrice: productPrice.replace(/^0+/, ""),
+            imgUrl: prevImgUrl,
+            productPrice,
             productAvailable,
             productDescription,
           })
         ).then(() => {
-          setLoadingOnAdd(false);
+          setLoadingOnEdit(false);
           navigate("/");
         });
       }
+      setDisableButton(true);
     }
-    // setLoadingOnAdd(false);
-    setDisableButton(false);
   };
 
   return (
     <>
-      {loadingOnAdd ? (
+      {loadingOnEdit ? (
         <Loading />
       ) : (
         <div className="form__container">
-          <h2>Add Product</h2>
+          <h2>Edit Product</h2>
 
-          <form id="submitProduct" onSubmit={handleSubmitProduct}>
+          <form id="submitEditProduct" onSubmit={handleSubmitEditProduct}>
             <div className="form__element">
-              <label>Name: </label>
+              <label>Name</label>
               <input
                 className="form__element--input"
                 type="text"
@@ -160,6 +204,7 @@ export function AddProduct() {
                 <option value="Computer">Computer</option>
                 <option value="Camera">Camera</option>
               </select>
+
               {errors.category && (
                 <p style={{ color: "red" }}>{errors.category}</p>
               )}
@@ -172,14 +217,13 @@ export function AddProduct() {
                   {imgShow ? (
                     <>
                       <img src={imgShow} />
-                      <span
+                      {/* <span
                         onClick={(e) => {
-                          e.stopPropagation();
                           handleCancelImage();
                         }}
                       >
                         X
-                      </span>
+                      </span> */}
                     </>
                   ) : (
                     ""
@@ -191,18 +235,17 @@ export function AddProduct() {
                 id="productImage"
                 type="file"
                 accept="image/png, image/jpeg"
-                onChange={handleImageFile}
+                onChange={handleEditImageFile}
               />
             </div>
 
             <div className="form__element">
-              <label>Price: </label>
+              <label>Price</label>
               <input
                 className="form__element--input"
                 type="number"
                 value={productPrice}
                 onChange={(e) => setProductPrice(e.target.value)}
-                // maxLength={4} doesn't work
               />
               {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
             </div>
@@ -217,8 +260,7 @@ export function AddProduct() {
                 <option value=""></option>
                 <option value="inStock">In Stock</option>
                 <option value="outOfStock">Out of Stock</option>
-              </select>
-
+              </select>{" "}
               {errors.available && (
                 <p style={{ color: "red" }}>{errors.available}</p>
               )}
@@ -235,17 +277,13 @@ export function AddProduct() {
             </div>
 
             <div className="form__element">
-              <button
-                type="submit"
-                disabled={disableButton}
-                onClick={checkErrors}
-              >
-                Add
+              <button type="submit" disabled={disableButton}>
+                Save
               </button>
             </div>
           </form>
         </div>
-      )}{" "}
+      )}
     </>
   );
 }

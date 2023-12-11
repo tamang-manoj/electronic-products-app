@@ -6,23 +6,41 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { charToSelect } from "../features/character/characterSlice";
 
 const Navbar = () => {
-  // const products = useAppSelector((state) => state.products.data);
-  // const productsCount = products.length;
-
   const cartProducts = useAppSelector((state) => state.cartProducts.data);
   const cartProductsCount = cartProducts.length;
 
-  const characters = useAppSelector((state) => state.characters);
-  const loggedIn = characters?.loggedIn;
-  const loggedInRole = characters.loggedInRole;
+  // const characters = useAppSelector((state) => state.characters);
+  // const loggedIn = characters?.loggedIn;
+  // const loggedInRole = characters.loggedInRole;
+
+  // const value = getPersistData();
+  // let persistedLog;
+  // if (value) {
+  //   persistedLog = JSON.parse(value);
+  // }
+  // console.log(persistedLog);
+
+  // { loggedIn: true, loggedInRole: foundCharacter.role }
+
+  const value = localStorage.getItem("persist_login");
+  let persistedLog;
+  if (value) {
+    persistedLog = JSON.parse(value);
+  }
+  // console.log(persistedLog);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(charToSelect({ loggedIn: false, loggedInRole: "user" }));
+    localStorage.setItem(
+      "persist_login",
+      JSON.stringify({ loggedIn: false, loggedInRole: "user" })
+    );
     navigate("/");
   };
+
   const handleLogin = () => {
     navigate("/login");
   };
@@ -36,30 +54,39 @@ const Navbar = () => {
 
         <div className="navbar__nonHeader">
           <div className="navbar__icon">
-            {loggedInRole === "user" && loggedIn ? (
+            {!persistedLog.loggedIn ? (
               <div
                 className="navbar__cart"
                 onClick={() => {
-                  loggedIn ? navigate("/cart") : navigate("/login");
+                  navigate("/login");
+                }}
+              >
+                <GrCart />
+              </div>
+            ) : persistedLog.loggedIn === true &&
+              persistedLog.loggedInRole === "user" ? (
+              <div
+                className="navbar__cart"
+                onClick={() => {
+                  navigate("/cart");
                 }}
               >
                 <GrCart />
                 <span className="icon__badge">{cartProductsCount}</span>
               </div>
-            ) : loggedInRole === "admin" ? (
+            ) : (
               <div
                 className="navbar__cart"
                 onClick={() => {
-                  navigate("/products/addProduct");
+                  navigate("/add-product");
                 }}
               >
                 <IoMdAddCircleOutline />
-                {/* <span className="icon__badge">{productsCount}</span> */}
               </div>
-            ) : null}
+            )}
           </div>
 
-          {loggedIn ? (
+          {persistedLog.loggedIn ? (
             <button onClick={handleLogout}>Logout</button>
           ) : (
             <button onClick={handleLogin}>Login</button>

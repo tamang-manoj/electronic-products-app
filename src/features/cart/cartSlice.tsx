@@ -18,6 +18,7 @@ export interface CartState {
   productPrice: string;
   productAvailable: string;
   count?: number;
+  productId: string;
 }
 
 interface InitialState {

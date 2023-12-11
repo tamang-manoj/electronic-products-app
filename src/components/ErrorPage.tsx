@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 
 const ErrorPage = () => {
   return (
-    <>
-      <h1>Logged Out</h1>
-      <Link to="/login">
-        <h2>Goto Login Page</h2>
+    <div className="empty-product">
+      <h1>Page Not Found</h1>
+      <Link to="/">
+        <h2>Goto Home Page</h2>
       </Link>
-    </>
+    </div>
   );
 };
 

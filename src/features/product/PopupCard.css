@@ -152,11 +152,11 @@
   border: none;
 }
 
-/* .deletePopup__card {
+.deletePopup__card {
   position: relative;
   background: #f0f0f0;
-  height: 15rem;
-  width: 30rem;
+  height: 12rem;
+  width: 25rem;
   margin: auto;
   padding: 2rem;
-} */
+}

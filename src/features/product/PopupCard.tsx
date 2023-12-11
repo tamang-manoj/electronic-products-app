@@ -4,11 +4,8 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import { BsCart3 } from "react-icons/bs";
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-
 import { DataState, deleteProduct } from "./productsSlice";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "../../firebase";
@@ -19,6 +16,7 @@ import {
   updateProductCount,
 } from "../cart/cartSlice";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import image from "../../../public/no_image.jpg";
 
 const PopupCard = ({
   open,
@@ -42,9 +40,16 @@ const PopupCard = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const characters = useAppSelector((state) => state.characters);
-  const loggedIn = characters.loggedIn;
-  const loggedInRole = characters.loggedInRole;
+  // const characters = useAppSelector((state) => state.characters);
+  // const loggedIn = characters.loggedIn;
+  // const loggedInRole = characters.loggedInRole;
+
+  const value = localStorage.getItem("persist_login");
+  let persistedLog: any;
+  if (value) {
+    persistedLog = JSON.parse(value);
+  }
+  // console.log(persistedLog);
 
   const cartProducts = useAppSelector((state) => state?.cartProducts.data);
 
@@ -60,25 +65,27 @@ const PopupCard = ({
     if (isItemInCart) {
       dispatch(deleteFromCart(isItemInCart.cartItemId));
     }
-    const deleteRef = ref(storage, `/images/${product.productImgId}`);
-    deleteObject(deleteRef)
-      .then(() => {
-        // console.log("image deleted from storage");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+
+    if (product.imgUrl) {
+      // console.log(product.imgUrl);
+
+      const deleteRef = ref(storage, `/images/${product.productImgId}`);
+      deleteObject(deleteRef);
+      // .then(() => {
+      //   console.log("image deleted from storage");
+      // })
+      // .catch((error) => {
+      //   console.log(error.message);
+      // });
+    }
   };
 
   const handleAddToCart = (productToAdd: CartState) => {
-    // console.log(productToAdd);
+    if (persistedLog.loggedIn && persistedLog.loggedInRole === "user") {
+      const productAlreadyInCart = cartProducts.find(
+        (cartProduct) => cartProduct.productId === productToAdd.productId
+      );
 
-    const productAlreadyInCart = cartProducts.find(
-      (cartProduct) => cartProduct.productImgId === productToAdd.productImgId
-    );
-    // console.log(productAlreadyInCart);
-
-    if (loggedIn) {
       if (productAlreadyInCart) {
         dispatch(
           updateProductCount({
@@ -86,7 +93,7 @@ const PopupCard = ({
             newCount: count,
           })
         );
-        alert("Product added to cart.");
+        alert("Product already in cart. Incrementing product count.");
       } else {
         dispatch(addToCart(productToAdd));
         alert("Product added to cart.");
@@ -98,7 +105,7 @@ const PopupCard = ({
   };
 
   const handleEdit = () => {
-    navigate(`/products/edit/${product.id}`);
+    navigate(`/edit-product/${product.id}`);
   };
 
   if (!open) {
@@ -111,11 +118,11 @@ const PopupCard = ({
         <div className="popup__card">
           <div className="popup__elements">
             <div>
-              <img
-                src={product.imgUrl}
-                alt="No Image Available"
-                className="popup__card--img"
-              />
+              {product.imgUrl ? (
+                <img src={product.imgUrl} />
+              ) : (
+                <img src={image} alt="no image" />
+              )}
             </div>
 
             <div className="popup__card--info">
@@ -136,7 +143,7 @@ const PopupCard = ({
 
               <div className="countAndIconSection">
                 <div>
-                  {loggedInRole === "user" ? (
+                  {persistedLog.loggedInRole === "user" ? (
                     <div className="popup__card--footer">
                       <div>
                         Quantity{" "}
@@ -168,6 +175,7 @@ const PopupCard = ({
                             productPrice: product.productPrice,
                             productImgId: product.productImgId,
                             count: count,
+                            productId: product.id,
                           })
                         }
                       >
