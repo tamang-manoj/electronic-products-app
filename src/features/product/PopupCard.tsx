@@ -26,7 +26,7 @@ const PopupCard = ({
 }: {
   open: boolean;
   handleCardClose: () => void;
-  product: any;
+  product: DataState;
 }) => {
   const [count, setCount] = useState(1);
 

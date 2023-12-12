@@ -18,7 +18,7 @@ export interface CartState {
   productPrice: string;
   productAvailable: string;
   count?: number;
-  productId: string;
+  productId?: string;
 }
 
 interface InitialState {
@@ -70,7 +70,7 @@ export const getCartData = createAsyncThunk(
   }
 );
 
-export const addToCart: any = createAsyncThunk(
+export const addToCart = createAsyncThunk(
   "cartProducts/addToCart",
   async (productToAddToCart: any, thunkAPI) => {
     await addDoc(collection(db, "cartProductsCollection"), {

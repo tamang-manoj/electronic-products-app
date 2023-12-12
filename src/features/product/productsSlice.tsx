@@ -48,10 +48,6 @@ export const productsSlice = createSlice({
       .addCase(getProducts.rejected, () => {
         console.log("rejected");
       });
-
-    // builder.addCase(addProduct.pending, (state) => {
-    //   state.isLoading = true;
-    // });
   },
 });
 

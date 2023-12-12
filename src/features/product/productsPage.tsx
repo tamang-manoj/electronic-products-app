@@ -4,7 +4,6 @@ import Loading from "../cart/Loading";
 import { useEffect } from "react";
 import { getProducts } from "./productsSlice";
 import { getCartData } from "../cart/cartSlice";
-// import { setCharInfo } from "../character/characterSlice";
 
 const ProductsPage = () => {
   const dispatch = useAppDispatch();

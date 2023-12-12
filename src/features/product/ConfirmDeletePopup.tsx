@@ -6,7 +6,7 @@ const ConfirmDeleteModal = ({
   product,
 }: {
   closeDeleteModal: () => void;
-  handleProductDelete: any;
+  handleProductDelete: (product: DataState) => void;
   product: DataState;
 }) => {
   return (

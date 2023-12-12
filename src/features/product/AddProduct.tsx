@@ -7,6 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import Loading from "../cart/Loading";
 import Validation from "../../components/Validation";
+import { IoMdCloudUpload } from "react-icons/io";
 
 export interface ErrorType {
   name?: string;
@@ -165,37 +166,30 @@ export function AddProduct() {
               )}
             </div>
 
-            <div className="form__element" onClick={() => alert("hi")}>
-              <label
-                htmlFor="productImage"
-                className="custom-file-upload"
-                // onClick={() => alert("hi")}
-              >
-                Image:
-                <input
-                  id="productImage"
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  onChange={handleImageFile}
-                />
-                <div className=" form__image--show">
-                  {imgShow ? (
-                    <>
-                      <img src={imgShow} />
-                      <span
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCancelImage();
-                        }}
-                      >
-                        X
-                      </span>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
+            <div className="form__element">
+              <label htmlFor="productImage" className="custom-file-upload">
+                Upload Image:
+                <IoMdCloudUpload className="imageUploadIcon" />
               </label>
+              <input
+                id="productImage"
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleImageFile}
+              />
+
+              <div className="form__image--show">
+                {imgShow ? (
+                  <>
+                    <img src={imgShow} />
+                    <span className="cancelImage" onClick={handleCancelImage}>
+                      X
+                    </span>
+                  </>
+                ) : (
+                  <span>No Image</span>
+                )}
+              </div>
             </div>
 
             <div className="form__element">

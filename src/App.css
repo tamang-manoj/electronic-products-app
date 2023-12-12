@@ -189,39 +189,58 @@
 }
 
 .form__element--description {
-  width: 308px;
+  width: 100%;
   height: 120px;
-  padding: 0.5rem 0.5rem;
-  /* box-sizing: border-box; */
+  /* padding: 0.75rem 0.5rem; */
+  padding: 10px;
   border: 2px solid #ccc;
   border-radius: 4px;
   background-color: #f8f8f8;
-  font-size: 16px;
-  resize: none;
-}
-.form__element input,
-.form__element textarea,
-.form__element select {
   font-size: 15px;
-}
-
-.category__label {
+  resize: none;
   margin: 0.5rem 0;
 }
 
+.category__label {
+  margin: 0.75rem 0;
+}
+
 .form__element > select,
+.form__element > input {
+  width: 100%;
+  height: 35px;
+  padding: 0 6px;
+  border: 1px solid white;
+  border: 2px solid #ccc;
+  background-color: #f8f8f8;
+  font-size: 15px;
+}
+.form__element > select:hover {
+  cursor: pointer;
+}
 .form__element > button {
   width: 100%;
   height: 35px;
-  /* padding: 0 15px; */
+  padding: 0 10px;
+  cursor: pointer;
+  background-color: #4f709c;
+  border: none;
+  color: white;
 }
-
+.form__element > button:hover {
+  background-color: #213555;
+  color: white;
+}
 .form__image--show {
   height: 5rem;
   width: 7rem;
   margin: 0.5rem 0 0 0;
   background-color: #cccccc;
   position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .form__image--show > img {
   height: 100%;
@@ -237,7 +256,7 @@ img {
   text-align: center;
 }
 
-.form__image--show span {
+.form__image--show .cancelImage {
   position: absolute;
   top: -0.5rem;
   right: -0.75rem;
@@ -249,6 +268,7 @@ img {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 /* input[type="file"]::file-selector-button {
@@ -269,10 +289,15 @@ input[type="file"] {
 }
 
 .custom-file-upload {
-  /* border: 1px solid #cccccc; */
-  display: inline-block;
-  /* padding: 6px 12px; */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   cursor: pointer;
+  width: 10rem;
+}
+
+.imageUploadIcon {
+  font-size: 1.5rem;
 }
 
 input::-webkit-outer-spin-button,

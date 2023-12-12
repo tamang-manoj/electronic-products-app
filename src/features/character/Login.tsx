@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router";
 import { setCharInfo } from "./characterSlice";
@@ -12,7 +12,7 @@ function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleRoleLogin = (e: any) => {
+  const handleRoleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (email) {
@@ -40,18 +40,6 @@ function Login() {
       }
     }
   };
-
-  const value = localStorage.getItem("persist_login");
-  let persistedLog: any;
-  if (value) {
-    persistedLog = JSON.parse(value);
-  }
-  const isLoggedIn = persistedLog?.isLoggedIn;
-  const role = persistedLog?.role;
-
-  useEffect(() => {
-    dispatch(setCharInfo({ isLoggedIn, role }));
-  }, [isLoggedIn, role, dispatch]);
 
   return (
     <div className="form__container">

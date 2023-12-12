@@ -13,6 +13,7 @@ import Loading from "../cart/Loading";
 import { ErrorType } from "./AddProduct";
 import Validation from "../../components/Validation";
 import { v4 as uuidv4 } from "uuid";
+import { IoMdCloudUpload } from "react-icons/io";
 
 export function EditProduct() {
   const [loadingOnEdit, setLoadingOnEdit] = useState(false);
@@ -224,25 +225,28 @@ export function EditProduct() {
 
             <div className="form__element">
               <label htmlFor="productImage" className="custom-file-upload">
-                Image:
-                <div className=" form__image--show">
-                  {imgShow ? (
-                    <>
-                      <img src={imgShow} />
-                      <span onClick={handleSelectImage}>X</span>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
+                Upload Image:
+                <IoMdCloudUpload className="imageUploadIcon" />
               </label>
-
               <input
                 id="productImage"
                 type="file"
                 accept="image/png, image/jpeg"
                 onChange={handleEditImageFile}
               />
+
+              <div className="form__image--show">
+                {imgShow ? (
+                  <>
+                    <img src={imgShow} />
+                    <span className="cancelImage" onClick={handleSelectImage}>
+                      X
+                    </span>
+                  </>
+                ) : (
+                  <span>No Image</span>
+                )}
+              </div>
             </div>
 
             <div className="form__element">
