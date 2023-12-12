@@ -1,20 +1,20 @@
 import { Navigate, Outlet } from "react-router";
-// import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../app/hooks";
 
 const ProtectedUser = () => {
-  // const status = useAppSelector((state) => state.characters.status);
+  const status = useAppSelector((state) => state.characters.status);
 
   // console.log(status);
 
-  const value = localStorage.getItem("persist_login");
-  let persistedLog;
-  if (value) {
-    persistedLog = JSON.parse(value);
-  }
+  // const value = localStorage.getItem("persist_login");
+  // let persistedLog;
+  // if (value) {
+  //   persistedLog = JSON.parse(value);
+  // }
 
   return (
     <div>
-      {persistedLog?.isLoggedIn === true && persistedLog?.role === "user" ? (
+      {status?.isLoggedIn === true && status?.role === "user" ? (
         <Outlet />
       ) : (
         <Navigate to="/login" />
