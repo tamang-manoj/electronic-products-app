@@ -13,7 +13,7 @@ const ProtectedAdmin = () => {
 
   return (
     <div>
-      {persistedLog.isLoggedIn && persistedLog.role === "admin" ? (
+      {persistedLog?.isLoggedIn && persistedLog?.role === "admin" ? (
         <Outlet />
       ) : (
         <Navigate to="/login" />

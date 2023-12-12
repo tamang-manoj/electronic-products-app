@@ -55,8 +55,8 @@ export function EditProduct() {
   const [imgFile, setImgFile] = useState<File>();
 
   const handleSelectImage = () => {
-    // setImgFile(undefined);
-    // setImgShow("");
+    setImgFile(undefined);
+    setImgShow("");
   };
 
   const handleEditImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,9 +130,7 @@ export function EditProduct() {
           );
         }
       } else if (!imgFile) {
-        if (prevImgUrl) {
-          // const deleteRef = ref(storage, `/images/${prevProductImgId}`);
-          // deleteObject(deleteRef);
+        if (prevImgUrl && imgShow) {
           dispatch(
             editProduct({
               id: prevId,
@@ -144,7 +142,23 @@ export function EditProduct() {
               productAvailable,
             })
           ).then(() => navigate("/"));
-        } else {
+        }
+        if (prevImgUrl && !imgShow) {
+          const deleteRef = ref(storage, `/images/${prevProductImgId}`);
+          deleteObject(deleteRef);
+
+          dispatch(
+            editProduct({
+              id: prevId,
+              productImgId: "",
+              productName,
+              productCategory,
+              imgUrl: "",
+              productPrice,
+              productAvailable,
+            })
+          ).then(() => navigate("/"));
+        } else if (!prevImgUrl) {
           dispatch(
             editProduct({
               id: prevId,

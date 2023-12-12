@@ -14,7 +14,7 @@ const ProtectedUser = () => {
 
   return (
     <div>
-      {persistedLog.isLoggedIn === true && persistedLog.role === "user" ? (
+      {persistedLog?.isLoggedIn === true && persistedLog?.role === "user" ? (
         <Outlet />
       ) : (
         <Navigate to="/login" />
