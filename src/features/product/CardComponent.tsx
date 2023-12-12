@@ -29,6 +29,10 @@ const CardComponent = ({ product }: ProductProp) => {
           ) : (
             <img src={image} alt="no image" />
           )}
+
+          {product.productAvailable === "outOfStock" && (
+            <p className="outOfStock">Out of Stock</p>
+          )}
         </div>
 
         <div className="card__description">

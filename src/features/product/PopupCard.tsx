@@ -147,37 +147,56 @@ const PopupCard = ({
                           <button
                             className="popup__card--countButton"
                             onClick={() => setCount((count) => count - 1)}
-                            disabled={count <= 1}
+                            disabled={
+                              count <= 1 ||
+                              product.productAvailable === "outOfStock"
+                            }
                           >
                             -
                           </button>
-                          <span>{count}</span>
+                          <span
+                            style={{
+                              cursor:
+                                product.productAvailable === "outOfStock"
+                                  ? "not-allowed"
+                                  : "",
+                            }}
+                          >
+                            {count}
+                          </span>
                           <button
                             className="popup__card--countButton"
                             onClick={() => setCount((count) => count + 1)}
-                            disabled={count === 5}
+                            disabled={
+                              count === 5 ||
+                              product.productAvailable === "outOfStock"
+                            }
                           >
                             +
                           </button>
                         </div>
 
-                        <div
-                          className="popup__card--cartIcon"
-                          onClick={() =>
-                            handleAddToCart({
-                              imgUrl: product.imgUrl,
-                              productName: product.productName,
-                              productCategory: product.productCategory,
-                              productAvailable: product.productAvailable,
-                              productPrice: product.productPrice,
-                              productImgId: product.productImgId,
-                              count: count,
-                              productId: product.id,
-                            })
-                          }
-                        >
-                          <BsCart3 />
-                        </div>
+                        {product.productAvailable === "inStock" ? (
+                          <div
+                            className="popup__card--cartIcon"
+                            onClick={() =>
+                              handleAddToCart({
+                                imgUrl: product.imgUrl,
+                                productName: product.productName,
+                                productCategory: product.productCategory,
+                                productAvailable: product.productAvailable,
+                                productPrice: product.productPrice,
+                                productImgId: product.productImgId,
+                                count: count,
+                                productId: product.id,
+                              })
+                            }
+                          >
+                            <BsCart3 />
+                          </div>
+                        ) : (
+                          <p style={{ color: "red" }}>Out of stock</p>
+                        )}
                       </div>
                     ) : (
                       <div className="popup__card--footer">

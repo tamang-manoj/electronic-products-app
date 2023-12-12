@@ -55,8 +55,8 @@ export function EditProduct() {
   const [imgFile, setImgFile] = useState<File>();
 
   const handleSelectImage = () => {
-    setImgFile(undefined);
-    setImgShow("");
+    // setImgFile(undefined);
+    // setImgShow("");
   };
 
   const handleEditImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,16 +131,15 @@ export function EditProduct() {
         }
       } else if (!imgFile) {
         if (prevImgUrl) {
-          const deleteRef = ref(storage, `/images/${prevProductImgId}`);
-          deleteObject(deleteRef);
-
+          // const deleteRef = ref(storage, `/images/${prevProductImgId}`);
+          // deleteObject(deleteRef);
           dispatch(
             editProduct({
               id: prevId,
-              productImgId: "",
+              productImgId: prevProductImgId,
               productName,
               productCategory,
-              imgUrl: "",
+              imgUrl: prevImgUrl,
               productPrice,
               productAvailable,
             })

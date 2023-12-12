@@ -48,6 +48,10 @@ const CartComponent = ({ cartProduct }: any) => {
           ) : (
             <img src={image} alt="no image" />
           )}
+
+          {cartProduct.productAvailable === "outOfStock" && (
+            <p className="outOfStock">Not Available</p>
+          )}
         </div>
 
         <div className="info__section">
@@ -71,24 +75,26 @@ const CartComponent = ({ cartProduct }: any) => {
           />
         </div>
 
-        <div className="cart__card--changeCount">
-          <button
-            className="popup__card--countButton"
-            onClick={handleDecrement}
-            disabled={cartProduct.count === 1}
-          >
-            -
-          </button>
+        {cartProduct.productAvailable === "inStock" && (
+          <div className="cart__card--changeCount">
+            <button
+              className="popup__card--countButton"
+              onClick={handleDecrement}
+              disabled={cartProduct.count === 1}
+            >
+              -
+            </button>
 
-          <span> {cartProduct.count} </span>
-          <button
-            className="popup__card--countButton"
-            onClick={handleIncrement}
-            disabled={cartProduct.count === productAvailable}
-          >
-            +
-          </button>
-        </div>
+            <span> {cartProduct.count} </span>
+            <button
+              className="popup__card--countButton"
+              onClick={handleIncrement}
+              disabled={cartProduct.count === productAvailable}
+            >
+              +
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

@@ -165,9 +165,19 @@ export function AddProduct() {
               )}
             </div>
 
-            <div className="form__element">
-              <label htmlFor="productImage" className="custom-file-upload">
+            <div className="form__element" onClick={() => alert("hi")}>
+              <label
+                htmlFor="productImage"
+                className="custom-file-upload"
+                // onClick={() => alert("hi")}
+              >
                 Image:
+                <input
+                  id="productImage"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={handleImageFile}
+                />
                 <div className=" form__image--show">
                   {imgShow ? (
                     <>
@@ -186,13 +196,6 @@ export function AddProduct() {
                   )}
                 </div>
               </label>
-
-              <input
-                id="productImage"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleImageFile}
-              />
             </div>
 
             <div className="form__element">

@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
 .popup__card {
@@ -80,22 +81,26 @@
   width: 45rem;
 }
 
-/* .countAndIconSection {
-  width: 25rem;
-} */
 .popup__card--footer {
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
   gap: 2rem;
 }
+
 .popup__card--countButton {
   height: 2rem;
   width: 2rem;
   cursor: pointer;
   border: none;
+  background-color: #a9a9a9;
+  color: white;
+}
+
+.popup__card--countButton:disabled {
+  cursor: not-allowed;
   background-color: #bbbbbb;
 }
+
 .popup__card--footer span,
 .cart__card--changeCount span {
   display: inline-block;
