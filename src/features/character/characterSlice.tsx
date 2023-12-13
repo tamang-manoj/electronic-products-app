@@ -26,7 +26,12 @@ const initialState: CharacterState = {
       role: "admin",
     },
   ],
-  status: { isLoggedIn: false, role: "user" },
+  status: {
+    isLoggedIn:
+      localStorage.getItem("persist_login") &&
+      JSON.parse(localStorage.getItem("persist_login") as string).isLoggedIn,
+    role: "user",
+  },
 };
 
 export const characterSlice = createSlice({

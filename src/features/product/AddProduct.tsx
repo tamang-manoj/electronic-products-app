@@ -167,29 +167,30 @@ export function AddProduct() {
             </div>
 
             <div className="form__element">
+              <p>Upload Image:</p>
               <label htmlFor="productImage" className="custom-file-upload">
-                Upload Image:
-                <IoMdCloudUpload className="imageUploadIcon" />
-              </label>
-              <input
-                id="productImage"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleImageFile}
-              />
-
-              <div className="form__image--show">
-                {imgShow ? (
-                  <>
-                    <img src={imgShow} />
-                    <span className="cancelImage" onClick={handleCancelImage}>
-                      X
+                <input
+                  id="productImage"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={handleImageFile}
+                />
+                {!imgShow && (
+                  <div className="form__image--show">
+                    <span>
+                      <IoMdCloudUpload className="imageUploadIcon" />
                     </span>
-                  </>
-                ) : (
-                  <span>No Image</span>
+                  </div>
                 )}
-              </div>
+              </label>
+              {imgShow && (
+                <div className="form__image--show">
+                  <img src={imgShow} />
+                  <span className="cancelImage" onClick={handleCancelImage}>
+                    X
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="form__element">
@@ -231,7 +232,11 @@ export function AddProduct() {
               />
             </div>
 
-            <div className="form__element">
+            <div className="form__element form__buttons">
+              <button type="reset" onClick={() => navigate(-1)}>
+                Cancel
+              </button>
+
               <button
                 type="submit"
                 disabled={disableButton}

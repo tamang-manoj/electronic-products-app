@@ -1,14 +1,14 @@
 import "./CartComponent.css";
 
 import { MdOutlineDelete } from "react-icons/md";
-import { useDispatch } from "react-redux";
-import { deleteFromCart } from "./cartSlice";
+import {} from "react-redux";
+import { CartState, deleteFromCart } from "./cartSlice";
 import { updateProductCount } from "./cartSlice";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import image from "/no_image.jpg";
 
-const CartComponent = ({ cartProduct }: any) => {
-  const dispatch = useDispatch();
+const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
+  const dispatch = useAppDispatch();
 
   const products = useAppSelector((state) => state.products.data);
   const selectedProductsInfo = products.find(
@@ -34,9 +34,9 @@ const CartComponent = ({ cartProduct }: any) => {
     );
   };
 
-  const deleteCartItem = async (cartProduct: any) => {
+  const deleteCartItem = async (cartProduct: CartState) => {
     // console.log(cartProduct);
-    dispatch(deleteFromCart(cartProduct.cartItemId));
+    dispatch(deleteFromCart(cartProduct.cartItemId as string));
   };
 
   return (

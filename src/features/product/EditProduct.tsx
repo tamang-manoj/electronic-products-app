@@ -105,6 +105,7 @@ export function EditProduct() {
                       imgUrl: url,
                       productPrice,
                       productAvailable,
+                      productDescription,
                     })
                   ).then(() => navigate("/"))
               );
@@ -124,6 +125,7 @@ export function EditProduct() {
                       imgUrl: url,
                       productPrice,
                       productAvailable,
+                      productDescription,
                     })
                   ).then(() => navigate("/"))
               );
@@ -141,6 +143,7 @@ export function EditProduct() {
               imgUrl: prevImgUrl,
               productPrice,
               productAvailable,
+              productDescription,
             })
           ).then(() => navigate("/"));
         }
@@ -157,6 +160,7 @@ export function EditProduct() {
               imgUrl: "",
               productPrice,
               productAvailable,
+              productDescription,
             })
           ).then(() => navigate("/"));
         } else if (!prevImgUrl) {
@@ -169,6 +173,7 @@ export function EditProduct() {
               imgUrl: "",
               productPrice,
               productAvailable,
+              productDescription,
             })
           ).then(() => navigate("/"));
         }
@@ -224,29 +229,30 @@ export function EditProduct() {
             </div>
 
             <div className="form__element">
+              <p>Upload Image:</p>
               <label htmlFor="productImage" className="custom-file-upload">
-                Upload Image:
-                <IoMdCloudUpload className="imageUploadIcon" />
-              </label>
-              <input
-                id="productImage"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleEditImageFile}
-              />
-
-              <div className="form__image--show">
-                {imgShow ? (
-                  <>
-                    <img src={imgShow} />
-                    <span className="cancelImage" onClick={handleSelectImage}>
-                      X
+                <input
+                  id="productImage"
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={handleEditImageFile}
+                />
+                {!imgShow && (
+                  <div className="form__image--show">
+                    <span>
+                      <IoMdCloudUpload className="imageUploadIcon" />
                     </span>
-                  </>
-                ) : (
-                  <span>No Image</span>
+                  </div>
                 )}
-              </div>
+              </label>
+              {imgShow && (
+                <div className="form__image--show">
+                  <img src={imgShow} />
+                  <span className="cancelImage" onClick={handleSelectImage}>
+                    X
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="form__element">
@@ -286,7 +292,11 @@ export function EditProduct() {
               />
             </div>
 
-            <div className="form__element">
+            <div className="form__element form__buttons">
+              <button type="reset" onClick={() => navigate(-1)}>
+                Cancel
+              </button>
+
               <button type="submit" disabled={disableButton}>
                 Save
               </button>

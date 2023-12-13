@@ -17,7 +17,7 @@ export interface CartState {
   imgUrl: string;
   productPrice: string;
   productAvailable: string;
-  count?: number;
+  count: number;
   productId?: string;
 }
 
@@ -72,7 +72,7 @@ export const getCartData = createAsyncThunk(
 
 export const addToCart = createAsyncThunk(
   "cartProducts/addToCart",
-  async (productToAddToCart: any, thunkAPI) => {
+  async (productToAddToCart: CartState, thunkAPI) => {
     await addDoc(collection(db, "cartProductsCollection"), {
       ...productToAddToCart,
     });
@@ -80,9 +80,9 @@ export const addToCart = createAsyncThunk(
   }
 );
 
-export const deleteFromCart: any = createAsyncThunk(
+export const deleteFromCart = createAsyncThunk(
   "cartProducts/deleteFromCart",
-  async (id: any, { dispatch }) => {
+  async (id: string, { dispatch }) => {
     await deleteDoc(doc(db, "cartProductsCollection", id));
     dispatch(getCartData());
   }
@@ -90,10 +90,20 @@ export const deleteFromCart: any = createAsyncThunk(
 
 export const updateEditInCart = createAsyncThunk(
   "cartProducts/updateEditInCart",
-  async ({ isEditProductInCart, editedProduct }: any, thunkAPI) => {
+  async (
+    {
+      isEditProductInCart,
+      editedProduct,
+    }: { isEditProductInCart: CartState; editedProduct: CartState },
+    thunkAPI
+  ) => {
     await updateDoc(
-      doc(db, "cartProductsCollection", isEditProductInCart.cartItemId),
-      editedProduct
+      doc(
+        db,
+        "cartProductsCollection",
+        isEditProductInCart.cartItemId as string
+      ),
+      editedProduct as any
     );
     // console.log(isEditProductInCart);
     // console.log("updated", editedProduct);
@@ -101,29 +111,24 @@ export const updateEditInCart = createAsyncThunk(
   }
 );
 
-export const updateProductCount: any = createAsyncThunk(
+export const updateProductCount = createAsyncThunk(
   "cartProducts/updateProductCount",
   async (
     {
       productAlreadyInCart,
       newCount,
     }: {
-      productAlreadyInCart: {
-        cartItemId: string;
-        productImgId: string;
-        productName: string;
-        productCategory: string;
-        imgUrl: string;
-        productPrice: string;
-        productAvailable: string;
-        count: number;
-      };
+      productAlreadyInCart: CartState;
       newCount: number;
     },
     thunkAPI
   ) => {
     await updateDoc(
-      doc(db, "cartProductsCollection", productAlreadyInCart.cartItemId),
+      doc(
+        db,
+        "cartProductsCollection",
+        productAlreadyInCart.cartItemId as string
+      ),
       {
         count: productAlreadyInCart.count + newCount,
       }

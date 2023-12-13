@@ -55,7 +55,7 @@ const PopupCard = ({
       (cartProduct) => cartProduct.productImgId === product.productImgId
     );
     if (isItemInCart) {
-      dispatch(deleteFromCart(isItemInCart.cartItemId));
+      dispatch(deleteFromCart(isItemInCart.cartItemId as string));
     }
 
     if (product.imgUrl) {
@@ -108,11 +108,11 @@ const PopupCard = ({
 
   return (
     <>
-      <div className="popup__wrapper">
+      <div className="popup__wrapper" onClick={() => handleCardClose()}>
         {isLoading ? (
           <Loading />
         ) : (
-          <div className="popup__card">
+          <div className="popup__card" onClick={(e) => e.stopPropagation()}>
             <div className="popup__elements">
               <div>
                 {product.imgUrl ? (
@@ -140,7 +140,25 @@ const PopupCard = ({
 
                 <div className="countAndIconSection">
                   <div>
-                    {status.role === "user" ? (
+                    {status.role === "admin" && status.isLoggedIn ? (
+                      <div className="popup__card--footer">
+                        <div
+                          className="popup__card--cartIcon"
+                          onClick={handleEdit}
+                        >
+                          <FaRegEdit />
+                        </div>
+
+                        <div
+                          className="popup__card--cartIcon"
+                          onClick={() => {
+                            setDeleteModal(true);
+                          }}
+                        >
+                          <MdOutlineDelete />
+                        </div>
+                      </div>
+                    ) : status.role === "user" && status.isLoggedIn ? (
                       <div className="popup__card--footer">
                         <div>
                           Quantity{" "}
@@ -199,23 +217,7 @@ const PopupCard = ({
                         )}
                       </div>
                     ) : (
-                      <div className="popup__card--footer">
-                        <div
-                          className="popup__card--cartIcon"
-                          onClick={handleEdit}
-                        >
-                          <FaRegEdit />
-                        </div>
-
-                        <div
-                          className="popup__card--cartIcon"
-                          onClick={() => {
-                            setDeleteModal(true);
-                          }}
-                        >
-                          <MdOutlineDelete />
-                        </div>
-                      </div>
+                      ""
                     )}
                   </div>
                 </div>

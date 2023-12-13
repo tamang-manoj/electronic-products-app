@@ -7,42 +7,5 @@ white
 dark-blue: #213555
 lighter-blue: #4F709C
 
-
-
-
 yellow: #e5d283
-
-regex:
-characters limitation: ^.{1,830}$
-numbers only: ^[0-9]+$
-
-
-<div className="form__element">
-              <label htmlFor="productImage" className="custom-file-upload">
-                Image:
-                <div className=" form__image--show">
-                  {imgShow ? (
-                    <>
-                      <img src={imgShow} />
-                      <span
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCancelImage();
-                        }}
-                      >
-                        X
-                      </span>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </label>
-
-              <input
-                id="productImage"
-                type="file"
-                accept="image/png, image/jpeg"
-                onChange={handleImageFile}
-              />
-            </div>
+orangered
