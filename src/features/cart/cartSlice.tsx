@@ -19,6 +19,7 @@ export interface CartState {
   productAvailable: string;
   count: number;
   productId?: string;
+  productDescription?: string;
 }
 
 interface InitialState {
@@ -34,7 +35,13 @@ const initialState: InitialState = {
 export const cartSlice = createSlice({
   name: "cartProducts",
   initialState,
-  reducers: {},
+  reducers: {
+    updateDeletedProduct: (state, action) => {
+      state.data = state.data.filter(
+        (eachData: CartState) => eachData.cartItemId !== action.payload
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCartData.fulfilled, (state: any, action) => {
@@ -82,9 +89,9 @@ export const addToCart = createAsyncThunk(
 
 export const deleteFromCart = createAsyncThunk(
   "cartProducts/deleteFromCart",
-  async (id: string, { dispatch }) => {
+  async (id: string) => {
     await deleteDoc(doc(db, "cartProductsCollection", id));
-    dispatch(getCartData());
+    // dispatch(getCartData());
   }
 );
 
@@ -144,4 +151,5 @@ export const updateProductCount = createAsyncThunk(
   }
 );
 
+export const { updateDeletedProduct } = cartSlice.actions;
 export default cartSlice.reducer;

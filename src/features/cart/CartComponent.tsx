@@ -1,14 +1,18 @@
 import "./CartComponent.css";
-
 import { MdOutlineDelete } from "react-icons/md";
-import {} from "react-redux";
-import { CartState, deleteFromCart } from "./cartSlice";
+import { CartState, deleteFromCart, updateDeletedProduct } from "./cartSlice";
 import { updateProductCount } from "./cartSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import image from "/no_image.jpg";
+import { useState } from "react";
 
 const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
   const dispatch = useAppDispatch();
+
+  const [deleteModal, setDeleteModal] = useState(false);
+  const closeDeleteModal = () => {
+    setDeleteModal(false);
+  };
 
   const products = useAppSelector((state) => state.products.data);
   const selectedProductsInfo = products.find(
@@ -35,8 +39,8 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
   };
 
   const deleteCartItem = async (cartProduct: CartState) => {
-    // console.log(cartProduct);
     dispatch(deleteFromCart(cartProduct.cartItemId as string));
+    dispatch(updateDeletedProduct(cartProduct.cartItemId));
   };
 
   return (
@@ -55,7 +59,9 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
         </div>
 
         <div className="info__section">
-          <div className="cart__card--name">{cartProduct.productName}</div>
+          <div className="cart__card--name" title={cartProduct.productName}>
+            {cartProduct.productName}
+          </div>
           <div className="cart__card--category">
             {cartProduct.productCategory}
           </div>
@@ -64,14 +70,12 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
           </div>
         </div>
 
-        <div className="cart__card--priceAndDelete">
-          <div className="cart__card--price">
-            Rs. {cartProduct.productPrice}
-          </div>
+        <div className="cart__card--price">Rs. {cartProduct.productPrice}</div>
 
+        <div>
           <MdOutlineDelete
             className="cart__card--deleteIcon"
-            onClick={() => deleteCartItem(cartProduct)}
+            onClick={() => setDeleteModal(true)}
           />
         </div>
 
@@ -96,6 +100,23 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
           </div>
         )}
       </div>
+
+      {deleteModal && (
+        <div className="popup__wrapper" onClick={() => closeDeleteModal()}>
+          <div
+            className="deletePopup__card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p>Are you sure you want to delete this item?</p>
+            <div className="deletePopup__buttons--container">
+              <button onClick={closeDeleteModal}>Cancel</button>
+              <button onClick={() => deleteCartItem(cartProduct)}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
