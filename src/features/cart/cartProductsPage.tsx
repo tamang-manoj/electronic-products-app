@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CartComponent from "./CartComponent";
-import Loading from "./Loading";
+// import Loading from "./Loading";
 import { useEffect, useState } from "react";
 import { getCartData } from "../cart/cartSlice";
 import Checkout from "./Checkout";
@@ -14,7 +14,7 @@ const CartProductsPage = () => {
 
   const cartProductsAll = useAppSelector((state) => state.cartProducts);
   const cartProducts = cartProductsAll.data;
-  const isLoading = cartProductsAll.loading;
+  // const isLoading = cartProductsAll.loading;
 
   const [info, setInfo] = useState<string[]>([]);
   const handleInputChecked = (e: any) => {
@@ -30,9 +30,7 @@ const CartProductsPage = () => {
   // console.log(cartProducts);
   return (
     <>
-      {isLoading ? (
-        <Loading />
-      ) : cartProducts.length === 0 ? (
+      {cartProducts.length === 0 ? (
         <div className="empty-product">
           <h1>No Products in the cart</h1>
         </div>
