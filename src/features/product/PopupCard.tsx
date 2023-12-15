@@ -17,7 +17,6 @@ import {
 } from "../cart/cartSlice";
 import ConfirmDeleteModal from "./ConfirmDeletePopup";
 import image from "/no_image.jpg";
-import Loading from "../cart/Loading";
 
 const PopupCard = ({
   open,
@@ -26,7 +25,7 @@ const PopupCard = ({
 }: {
   open: boolean;
   handleCardClose: () => void;
-  product: DataState;
+  product: DataState | any;
 }) => {
   const [count, setCount] = useState(1);
 
@@ -43,7 +42,7 @@ const PopupCard = ({
 
   const cartProductsAll = useAppSelector((state) => state?.cartProducts);
   const cartProducts = cartProductsAll.data;
-  const isLoading = cartProductsAll.loading;
+  // const isLoading = cartProductsAll.loading;
 
   const handleProductDelete = (product: DataState) => {
     if (product.id) {
@@ -109,126 +108,123 @@ const PopupCard = ({
   return (
     <>
       <div className="popup__wrapper" onClick={() => handleCardClose()}>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <div className="popup__card" onClick={(e) => e.stopPropagation()}>
-            <div className="popup__elements">
-              <div>
-                {product.imgUrl ? (
-                  <img src={product.imgUrl} />
-                ) : (
-                  <img src={image} alt="no image" />
-                )}
+        (
+        <div className="popup__card" onClick={(e) => e.stopPropagation()}>
+          <div className="popup__elements">
+            <div>
+              {product.imgUrl ? (
+                <img src={product.imgUrl} />
+              ) : (
+                <img src={image} alt="no image" />
+              )}
+            </div>
+
+            <div className="popup__card--info">
+              <p className="popup__heading">{product.productName}</p>
+              <p className="popup__category">
+                Category: {product.productCategory}
+              </p>
+
+              <hr />
+
+              <div className="popup__description">
+                Description: {product.productDescription}
               </div>
 
-              <div className="popup__card--info">
-                <p className="popup__heading">{product.productName}</p>
-                <p className="popup__category">
-                  Category: {product.productCategory}
-                </p>
+              <hr />
 
-                <hr />
+              <h1 className="popup__price">Rs. {product.productPrice}</h1>
 
-                <div className="popup__description">
-                  Description: {product.productDescription}
-                </div>
+              <div className="countAndIconSection">
+                <div>
+                  {status.role === "admin" && status.isLoggedIn ? (
+                    <div className="popup__card--footer">
+                      <div
+                        className="popup__card--cartIcon"
+                        onClick={handleEdit}
+                      >
+                        <FaRegEdit />
+                      </div>
 
-                <hr />
-
-                <h1 className="popup__price">Rs. {product.productPrice}</h1>
-
-                <div className="countAndIconSection">
-                  <div>
-                    {status.role === "admin" && status.isLoggedIn ? (
-                      <div className="popup__card--footer">
-                        <div
-                          className="popup__card--cartIcon"
-                          onClick={handleEdit}
+                      <div
+                        className="popup__card--cartIcon"
+                        onClick={() => {
+                          setDeleteModal(true);
+                        }}
+                      >
+                        <MdOutlineDelete />
+                      </div>
+                    </div>
+                  ) : status.role === "user" && status.isLoggedIn ? (
+                    <div className="popup__card--footer">
+                      <div>
+                        Quantity{" "}
+                        <button
+                          className="popup__card--countButton"
+                          onClick={() => setCount((count) => count - 1)}
+                          disabled={
+                            count <= 1 ||
+                            product.productAvailable === "outOfStock"
+                          }
                         >
-                          <FaRegEdit />
-                        </div>
-
-                        <div
-                          className="popup__card--cartIcon"
-                          onClick={() => {
-                            setDeleteModal(true);
+                          -
+                        </button>
+                        <span
+                          style={{
+                            cursor:
+                              product.productAvailable === "outOfStock"
+                                ? "not-allowed"
+                                : "",
                           }}
                         >
-                          <MdOutlineDelete />
-                        </div>
+                          {count}
+                        </span>
+                        <button
+                          className="popup__card--countButton"
+                          onClick={() => setCount((count) => count + 1)}
+                          disabled={
+                            count === 5 ||
+                            product.productAvailable === "outOfStock"
+                          }
+                        >
+                          +
+                        </button>
                       </div>
-                    ) : status.role === "user" && status.isLoggedIn ? (
-                      <div className="popup__card--footer">
-                        <div>
-                          Quantity{" "}
-                          <button
-                            className="popup__card--countButton"
-                            onClick={() => setCount((count) => count - 1)}
-                            disabled={
-                              count <= 1 ||
-                              product.productAvailable === "outOfStock"
-                            }
-                          >
-                            -
-                          </button>
-                          <span
-                            style={{
-                              cursor:
-                                product.productAvailable === "outOfStock"
-                                  ? "not-allowed"
-                                  : "",
-                            }}
-                          >
-                            {count}
-                          </span>
-                          <button
-                            className="popup__card--countButton"
-                            onClick={() => setCount((count) => count + 1)}
-                            disabled={
-                              count === 5 ||
-                              product.productAvailable === "outOfStock"
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
 
-                        {product.productAvailable === "inStock" ? (
-                          <div
-                            className="popup__card--cartIcon"
-                            onClick={() =>
-                              handleAddToCart({
-                                imgUrl: product.imgUrl,
-                                productName: product.productName,
-                                productCategory: product.productCategory,
-                                productAvailable: product.productAvailable,
-                                productPrice: product.productPrice,
-                                productImgId: product.productImgId,
-                                count: count,
-                                productId: product.id,
-                              })
-                            }
-                          >
-                            <BsCart3 />
-                          </div>
-                        ) : (
-                          <p style={{ color: "red" }}>Out of stock</p>
-                        )}
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                      {product.productAvailable === "inStock" ? (
+                        <div
+                          className="popup__card--cartIcon"
+                          onClick={() =>
+                            handleAddToCart({
+                              imgUrl: product.imgUrl,
+                              productName: product.productName,
+                              productCategory: product.productCategory,
+                              productAvailable: product.productAvailable,
+                              productPrice: product.productPrice,
+                              productImgId: product.productImgId,
+                              count: count,
+                              productId: product.id,
+                            })
+                          }
+                        >
+                          <BsCart3 />
+                        </div>
+                      ) : (
+                        <p style={{ color: "red" }}>Out of stock</p>
+                      )}
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
-            <button className="popup__closer" onClick={handleCardClose}>
-              X
-            </button>
           </div>
-        )}
-
+          <button className="popup__closer" onClick={handleCardClose}>
+            X
+          </button>
+        </div>
+        )
         {deleteModal && (
           <ConfirmDeleteModal
             product={product}

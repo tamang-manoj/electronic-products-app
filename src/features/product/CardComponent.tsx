@@ -1,9 +1,9 @@
 import { DataState } from "./productsSlice";
-import { useState } from "react";
 import PopupCard from "./PopupCard";
 import image from "/no_image.jpg";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { CartState, addToCart, updateProductCount } from "../cart/cartSlice";
+import { useState } from "react";
 
 type ProductProp = {
   product: DataState;

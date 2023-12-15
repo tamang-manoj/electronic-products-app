@@ -5,8 +5,9 @@ import { updateProductCount } from "./cartSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import image from "/no_image.jpg";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
-const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
+const CartComponent = ({ cartProduct }: { cartProduct: CartState | any }) => {
   const dispatch = useAppDispatch();
 
   const [deleteModal, setDeleteModal] = useState(false);
@@ -16,7 +17,7 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
 
   const products = useAppSelector((state) => state.products.data);
   const selectedProductsInfo = products.find(
-    (product) => product.productImgId === cartProduct.productImgId
+    (product) => product.id === cartProduct.productId
   );
   const productAvailable = Number(selectedProductsInfo?.productAvailable);
 
@@ -43,9 +44,21 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
     dispatch(updateDeletedProduct(cartProduct.cartItemId));
   };
 
+  const navigate = useNavigate();
+
+  const handleCartProductShow = (cartProduct: CartState) => {
+    // console.log(cartProduct);
+    navigate("/", { state: cartProduct });
+  };
+
   return (
     <>
-      <div className="cart__product--card">
+      <div
+        className="cart__product--card"
+        onClick={() => {
+          handleCartProductShow(cartProduct);
+        }}
+      >
         <div className="cartImage__container">
           {cartProduct.imgUrl ? (
             <img src={`${cartProduct.imgUrl}`} />
@@ -75,7 +88,10 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
         <div>
           <MdOutlineDelete
             className="cart__card--deleteIcon"
-            onClick={() => setDeleteModal(true)}
+            onClick={(e: any) => {
+              e.stopPropagation();
+              setDeleteModal(true);
+            }}
           />
         </div>
 
@@ -83,7 +99,10 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
           <div className="cart__card--changeCount">
             <button
               className="popup__card--countButton"
-              onClick={handleDecrement}
+              onClick={(e) => {
+                handleDecrement();
+                e.stopPropagation();
+              }}
               disabled={cartProduct.count === 1}
             >
               -
@@ -92,7 +111,10 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
             <span> {cartProduct.count} </span>
             <button
               className="popup__card--countButton"
-              onClick={handleIncrement}
+              onClick={(e) => {
+                handleIncrement();
+                e.stopPropagation();
+              }}
               disabled={cartProduct.count === productAvailable}
             >
               +
@@ -100,7 +122,6 @@ const CartComponent = ({ cartProduct }: { cartProduct: CartState }) => {
           </div>
         )}
       </div>
-
       {deleteModal && (
         <div className="popup__wrapper" onClick={() => closeDeleteModal()}>
           <div
