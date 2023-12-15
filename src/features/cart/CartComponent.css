@@ -2,7 +2,7 @@
   margin: 1rem auto;
   display: flex;
   align-items: center;
-  width: 75rem;
+  width: 55rem;
   overflow-wrap: wrap;
   background-color: #f0f0f0;
 }
@@ -24,8 +24,8 @@
   display: flex;
   flex-direction: column;
   line-height: 1.75rem;
-  min-width: 40rem;
-  max-width: 40rem;
+  min-width: 22rem;
+  max-width: 22rem;
 
   text-wrap: nowrap;
   overflow: hidden;
@@ -71,4 +71,51 @@
   width: 2rem;
   height: 2rem;
   background-color: #4f709c;
+}
+
+.checkbox__cart {
+  display: flex;
+  margin: 1rem;
+}
+
+.cartCheckout__container {
+  display: flex;
+}
+
+.checkout__card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 2rem;
+  background-color: #f0f0f0;
+  height: fit-content;
+  padding: 1rem;
+  width: 20rem;
+}
+.checkoutCard__input {
+  height: 2rem;
+  padding: 0.25rem;
+  margin-right: 1rem;
+}
+
+.checkout__button {
+  height: 2rem;
+  padding: 0.25rem;
+  background-color: #4f709c;
+  color: #f0f0f0;
+  border: none;
+  width: 100%;
+}
+.checkoutCard__applyButton {
+  width: 5rem;
+}
+.checkoutCard__applyButton:hover,
+.checkout__button:hover {
+  cursor: pointer;
+  background-color: #213555;
+}
+.promocode__success {
+  color: #213555;
+  margin: 0.25rem 0;
+  line-height: 2rem;
 }
