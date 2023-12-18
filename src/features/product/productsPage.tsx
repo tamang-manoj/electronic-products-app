@@ -2,9 +2,9 @@ import CardComponent from "./CardComponent";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Loading from "../cart/Loading";
 import { useEffect, useState } from "react";
-import { getProducts } from "./productsSlice";
+import { DataState, getProducts } from "./productsSlice";
 import { getCartData } from "../cart/cartSlice";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import PopupCard from "./PopupCard";
 
 const ProductsPage = () => {
@@ -20,7 +20,6 @@ const ProductsPage = () => {
     dispatch(getCartData());
   }, []);
 
-  // const [showInfo, setShowInfo] = useState({});
   const [open, setOpen] = useState(false);
 
   const handleCardClose = () => {
@@ -29,15 +28,18 @@ const ProductsPage = () => {
 
   const [item, setItem] = useState();
   const location = useLocation();
-  // console.log(location);
-  // console.log("Item in state is: ", item);
-  const navigate = useNavigate();
+  // console.log(location.state);
 
   useEffect(() => {
     if (location.state) {
-      setItem(location.state);
+      const selectedProd = data.find(
+        (product) => product.id === location.state.productId
+      );
+      console.log(selectedProd);
+      setItem(selectedProd as DataState | any);
       setOpen(true);
-      navigate(location.pathname, { replace: true });
+      // navigate(location.pathname, { replace: true });
+      window.history.replaceState({}, document.title);
     }
   }, [location]);
 

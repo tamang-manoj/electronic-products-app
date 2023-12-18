@@ -6,6 +6,7 @@ import { deleteFromCart, updateDeletedProduct } from "./cartSlice";
 const Checkout = ({ info }: { info: string[] }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputPromo, setInputPromo] = useState("");
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const promocodes = useAppSelector((state) => state.promocodes);
@@ -44,13 +45,9 @@ const Checkout = ({ info }: { info: string[] }) => {
     setInputPromo(inputValue);
   };
 
-  const navigate = useNavigate();
-
   const handleCheckoutBtn = () => {
     console.log("checkout clicked");
-
     navigate("/");
-
     checkoutProducts.forEach((checkoutProduct) => {
       dispatch(deleteFromCart(checkoutProduct.cartItemId as string));
       dispatch(updateDeletedProduct(checkoutProduct.cartItemId));
@@ -66,7 +63,7 @@ const Checkout = ({ info }: { info: string[] }) => {
         </p>
 
         <div className="promocode__success">
-          {isMatchPromocode && (
+          {isMatchPromocode && checkoutProducts.length !== 0 && (
             <>
               <p>Applied Promocode "{isMatchPromocode.promocode}"</p>
               <p>Promocode Discout: Rs. -{isMatchPromocode.discount}</p>
@@ -74,20 +71,22 @@ const Checkout = ({ info }: { info: string[] }) => {
           )}
         </div>
 
-        <div>
-          <input
-            className="checkoutCard__input"
-            type="text"
-            placeholder="Enter Promo Code"
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <button
-            className="checkout__button checkoutCard__applyButton"
-            onClick={(e) => handleSubmitPromocode(e)}
-          >
-            Apply
-          </button>
-        </div>
+        {!isMatchPromocode && checkoutProducts.length !== 0 && (
+          <div>
+            <input
+              className="checkoutCard__input"
+              type="text"
+              placeholder="Enter Promo Code"
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <button
+              className="checkout__button checkoutCard__applyButton"
+              onClick={(e) => handleSubmitPromocode(e)}
+            >
+              Apply
+            </button>
+          </div>
+        )}
 
         <p>
           Total Payment: Rs.{" "}
