@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
 import Loading from "../cart/Loading";
-import Validation from "../../components/Validation";
 import { IoMdCloudUpload } from "react-icons/io";
+import useFormData from "./cusomHooks/useFormData";
+import useImageData from "./cusomHooks/useImageData";
 
 export interface ErrorType {
   name?: string;
@@ -19,22 +20,21 @@ export interface ErrorType {
 export function AddProduct() {
   const [loadingOnAdd, setLoadingOnAdd] = useState(false);
 
-  const [productName, setProductName] = useState<string>("");
-  const [productCategory, setProductCategory] = useState<string>("");
-  const [imgFile, setImgFile] = useState<File>();
-  const [productPrice, setProductPrice] = useState<string>("");
-  const [productAvailable, setProductAvailable] = useState<string>("");
-  const [imgShow, setImgShow] = useState<string>("");
-  const [productDescription, setProductDescription] = useState("");
+  const [disableButton, setDisableButton] = useState(false);
 
-  const [disableButton, setDisableButton] = useState<boolean>(false);
+  const { imgFile, imgShow, handleCancelImage, handleImageFile } = useImageData(
+    { initialImgShow: "" }
+  );
 
-  const [errors, setErrors] = useState<ErrorType>({
-    name: "",
-    category: "",
-    price: "",
-    available: "",
+  const { formData, errors, checkErrors, handleChange } = useFormData({
+    productName: "",
+    productCategory: "",
+    productPrice: "",
+    productAvailable: "",
+    productDescription: "",
   });
+
+  // console.log(formData);
 
   const productImgId = uuidv4();
 
@@ -42,36 +42,15 @@ export function AddProduct() {
 
   const navigate = useNavigate();
 
-  const handleCancelImage = () => {
-    setImgFile(undefined);
-    setImgShow("");
-  };
-
-  const handleImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target.files);
-    if (e.target.files) {
-      if (e.target.files.length !== 0) {
-        setImgFile(e.target.files[0]);
-        setImgShow(URL.createObjectURL(e.target.files[0]));
-      }
-    }
-  };
-
-  const checkErrors = () => {
-    setErrors(
-      Validation({
-        productName,
-        productCategory,
-        productPrice,
-        productAvailable,
-      })
-    );
-  };
-
   const handleSubmitProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (productName && productCategory && productPrice && productAvailable) {
+    if (
+      formData.productName &&
+      formData.productCategory &&
+      formData.productPrice &&
+      formData.productAvailable
+    ) {
       setLoadingOnAdd(true);
 
       setDisableButton(true);
@@ -86,11 +65,11 @@ export function AddProduct() {
                   addProduct({
                     imgUrl: url,
                     productImgId,
-                    productName,
-                    productCategory,
-                    productPrice: productPrice.replace(/^0+/, ""),
-                    productAvailable,
-                    productDescription,
+                    productName: formData.productName,
+                    productCategory: formData.productCategory,
+                    productPrice: formData.productPrice.replace(/^0+/, ""),
+                    productAvailable: formData.productAvailable,
+                    productDescription: formData.productDescription,
                   })
                 ).then(() => {
                   setLoadingOnAdd(false);
@@ -106,11 +85,11 @@ export function AddProduct() {
           addProduct({
             imgUrl: "",
             productImgId,
-            productName,
-            productCategory,
-            productPrice: productPrice.replace(/^0+/, ""),
-            productAvailable,
-            productDescription,
+            productName: formData.productName,
+            productCategory: formData.productCategory,
+            productPrice: formData.productPrice.replace(/^0+/, ""),
+            productAvailable: formData.productAvailable,
+            productDescription: formData.productDescription,
           })
         ).then(() => {
           setLoadingOnAdd(false);
@@ -136,8 +115,9 @@ export function AddProduct() {
               <input
                 className="form__element--input"
                 type="text"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
+                value={formData.productName}
+                name="productName"
+                onChange={handleChange}
                 maxLength={130}
               />
               {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
@@ -150,9 +130,9 @@ export function AddProduct() {
 
               <select
                 id="productCategory"
+                value={formData.productCategory}
                 name="productCategory"
-                value={productCategory}
-                onChange={(e) => setProductCategory(e.target.value)}
+                onChange={handleChange}
               >
                 <option value="">Select</option>
                 <option value="Mobile">Mobile</option>
@@ -175,6 +155,7 @@ export function AddProduct() {
                   accept="image/png, image/jpeg"
                   onChange={handleImageFile}
                 />
+
                 {!imgShow && (
                   <div className="form__image--show">
                     <span>
@@ -198,9 +179,9 @@ export function AddProduct() {
               <input
                 className="form__element--input"
                 type="number"
-                value={productPrice}
-                onChange={(e) => setProductPrice(e.target.value)}
-                // maxLength={4} doesn't work
+                value={formData.productPrice}
+                name="productPrice"
+                onChange={handleChange}
               />
               {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
             </div>
@@ -209,8 +190,9 @@ export function AddProduct() {
               <label>Availablility: </label>
               <select
                 className="form__element--input"
-                value={productAvailable}
-                onChange={(e) => setProductAvailable(e.target.value)}
+                value={formData.productAvailable}
+                name="productAvailable"
+                onChange={handleChange}
               >
                 <option value=""></option>
                 <option value="inStock">In Stock</option>
@@ -226,8 +208,9 @@ export function AddProduct() {
               <label>Description: </label>
               <textarea
                 className="form__element--description"
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
+                value={formData.productDescription}
+                name="productDescription"
+                onChange={handleChange}
                 maxLength={830}
               />
             </div>

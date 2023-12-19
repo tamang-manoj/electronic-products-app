@@ -10,14 +10,13 @@ import {
 } from "firebase/storage";
 import { storage } from "../../firebase";
 import Loading from "../cart/Loading";
-import { ErrorType } from "./AddProduct";
-import Validation from "../../components/Validation";
 import { v4 as uuidv4 } from "uuid";
 import { IoMdCloudUpload } from "react-icons/io";
+import useFormData from "./cusomHooks/useFormData";
+import useImageData from "./cusomHooks/useImageData";
 
 export function EditProduct() {
   const [loadingOnEdit, setLoadingOnEdit] = useState(false);
-
   const { idInParam } = useParams();
 
   const product = useAppSelector((state) => {
@@ -26,63 +25,34 @@ export function EditProduct() {
 
   const prevId = product?.id;
   const prevProductImgId = product?.productImgId;
-  const [productName, setProductName] = useState(product?.productName);
-  const [productCategory, setProductCategory] = useState(
-    product?.productCategory
-  );
-  const [productPrice, setProductPrice] = useState(product?.productPrice);
-  const [productAvailable, setProductAvailable] = useState(
-    product?.productAvailable
-  );
-  const [productDescription, setProductDescription] = useState(
-    product?.productDescription
-  );
+
+  const { formData, errors, checkErrors, handleChange } = useFormData({
+    productName: product?.productName,
+    productCategory: product?.productCategory,
+    productPrice: product?.productPrice,
+    productAvailable: product?.productAvailable,
+    productDescription: product?.productDescription,
+  });
 
   const [disableButton, setDisableButton] = useState(false);
-
-  const [errors, setErrors] = useState<ErrorType>({
-    name: "",
-    category: "",
-    price: "",
-    available: "",
-  });
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const newProductImgId = uuidv4();
 
   const prevImgUrl = product?.imgUrl;
-  const [imgShow, setImgShow] = useState(prevImgUrl);
-  // console.log(prevImgUrl);
-  const [imgFile, setImgFile] = useState<File>();
-
-  const handleSelectImage = () => {
-    setImgFile(undefined);
-    setImgShow("");
-  };
-
-  const handleEditImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target.files);
-    if (e?.target.files) {
-      if (e.target.files[0]) {
-        setImgFile(e.target.files[0]);
-        setImgShow(URL.createObjectURL(e.target.files[0]));
-      }
-    }
-  };
+  const { imgFile, imgShow, handleCancelImage, handleImageFile } = useImageData(
+    { initialImgShow: prevImgUrl as string }
+  );
 
   const handleSubmitEditProduct = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setErrors(
-      Validation({
-        productName,
-        productCategory,
-        productPrice,
-        productAvailable,
-      })
-    );
-
-    if (productName && productCategory && productPrice && productAvailable) {
+    if (
+      formData.productName &&
+      formData.productCategory &&
+      formData.productPrice &&
+      formData.productAvailable
+    ) {
       setDisableButton(true);
       setLoadingOnEdit(true);
 
@@ -100,12 +70,12 @@ export function EditProduct() {
                     editProduct({
                       id: prevId,
                       productImgId: newProductImgId,
-                      productName,
-                      productCategory,
+                      productName: formData.productName,
+                      productCategory: formData.productCategory,
                       imgUrl: url,
-                      productPrice,
-                      productAvailable,
-                      productDescription,
+                      productPrice: formData.productPrice,
+                      productAvailable: formData.productAvailable,
+                      productDescription: formData.productDescription,
                     })
                   ).then(() => navigate("/"))
               );
@@ -120,12 +90,12 @@ export function EditProduct() {
                     editProduct({
                       id: prevId,
                       productImgId: newProductImgId,
-                      productName,
-                      productCategory,
+                      productName: formData.productName,
+                      productCategory: formData.productCategory,
                       imgUrl: url,
-                      productPrice,
-                      productAvailable,
-                      productDescription,
+                      productPrice: formData.productPrice,
+                      productAvailable: formData.productAvailable,
+                      productDescription: formData.productDescription,
                     })
                   ).then(() => navigate("/"))
               );
@@ -138,12 +108,12 @@ export function EditProduct() {
             editProduct({
               id: prevId,
               productImgId: prevProductImgId,
-              productName,
-              productCategory,
+              productName: formData.productName,
+              productCategory: formData.productCategory,
               imgUrl: prevImgUrl,
-              productPrice,
-              productAvailable,
-              productDescription,
+              productPrice: formData.productPrice,
+              productAvailable: formData.productAvailable,
+              productDescription: formData.productDescription,
             })
           ).then(() => navigate("/"));
         }
@@ -155,12 +125,12 @@ export function EditProduct() {
             editProduct({
               id: prevId,
               productImgId: "",
-              productName,
-              productCategory,
+              productName: formData.productName,
+              productCategory: formData.productCategory,
               imgUrl: "",
-              productPrice,
-              productAvailable,
-              productDescription,
+              productPrice: formData.productPrice,
+              productAvailable: formData.productAvailable,
+              productDescription: formData.productDescription,
             })
           ).then(() => navigate("/"));
         } else if (!prevImgUrl) {
@@ -168,12 +138,12 @@ export function EditProduct() {
             editProduct({
               id: prevId,
               productImgId: "",
-              productName,
-              productCategory,
+              productName: formData.productName,
+              productCategory: formData.productCategory,
               imgUrl: "",
-              productPrice,
-              productAvailable,
-              productDescription,
+              productPrice: formData.productPrice,
+              productAvailable: formData.productAvailable,
+              productDescription: formData.productDescription,
             })
           ).then(() => navigate("/"));
         }
@@ -197,8 +167,9 @@ export function EditProduct() {
               <input
                 className="form__element--input"
                 type="text"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
+                name="productName"
+                value={formData.productName}
+                onChange={handleChange}
                 maxLength={130}
               />
               {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
@@ -212,8 +183,8 @@ export function EditProduct() {
               <select
                 id="productCategory"
                 name="productCategory"
-                value={productCategory}
-                onChange={(e) => setProductCategory(e.target.value)}
+                value={formData.productCategory}
+                onChange={handleChange}
               >
                 <option value="">Select</option>
                 <option value="Mobile">Mobile</option>
@@ -235,7 +206,7 @@ export function EditProduct() {
                   id="productImage"
                   type="file"
                   accept="image/png, image/jpeg"
-                  onChange={handleEditImageFile}
+                  onChange={handleImageFile}
                 />
                 {!imgShow && (
                   <div className="form__image--show">
@@ -248,7 +219,7 @@ export function EditProduct() {
               {imgShow && (
                 <div className="form__image--show">
                   <img src={imgShow} />
-                  <span className="cancelImage" onClick={handleSelectImage}>
+                  <span className="cancelImage" onClick={handleCancelImage}>
                     X
                   </span>
                 </div>
@@ -260,8 +231,9 @@ export function EditProduct() {
               <input
                 className="form__element--input"
                 type="number"
-                value={productPrice}
-                onChange={(e) => setProductPrice(e.target.value)}
+                name="productPrice"
+                value={formData.productPrice}
+                onChange={handleChange}
               />
               {errors.price && <p style={{ color: "red" }}>{errors.price}</p>}
             </div>
@@ -270,8 +242,9 @@ export function EditProduct() {
               <label>Availablility: </label>
               <select
                 className="form__element--input"
-                value={productAvailable}
-                onChange={(e) => setProductAvailable(e.target.value)}
+                name="productAvailable"
+                value={formData.productAvailable}
+                onChange={handleChange}
               >
                 <option value=""></option>
                 <option value="inStock">In Stock</option>
@@ -286,8 +259,9 @@ export function EditProduct() {
               <label>Description: </label>
               <textarea
                 className="form__element--description"
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
+                name="productDescription"
+                value={formData.productDescription}
+                onChange={handleChange}
                 maxLength={830}
               />
             </div>
@@ -297,7 +271,11 @@ export function EditProduct() {
                 Cancel
               </button>
 
-              <button type="submit" disabled={disableButton}>
+              <button
+                type="submit"
+                disabled={disableButton}
+                onClick={checkErrors}
+              >
                 Save
               </button>
             </div>
