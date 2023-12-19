@@ -22,7 +22,7 @@ const Checkout = ({ info }: { info: string[] }) => {
   const checkoutProducts = cartProducts.filter((product) =>
     info.includes(product.cartItemId as string)
   );
-  // console.log(checkoutProducts);
+  console.log(checkoutProducts);
 
   const costArray = checkoutProducts.map(
     (checkoutProduct: { productPrice: string; count: number }) =>
@@ -46,12 +46,15 @@ const Checkout = ({ info }: { info: string[] }) => {
   };
 
   const handleCheckoutBtn = () => {
-    console.log("checkout clicked");
-    navigate("/");
-    checkoutProducts.forEach((checkoutProduct) => {
-      dispatch(deleteFromCart(checkoutProduct.cartItemId as string));
-      dispatch(updateDeletedProduct(checkoutProduct.cartItemId));
-    });
+    if (checkoutProducts.length !== 0) {
+      navigate("/");
+      checkoutProducts.forEach((checkoutProduct) => {
+        dispatch(deleteFromCart(checkoutProduct.cartItemId as string));
+        dispatch(updateDeletedProduct(checkoutProduct.cartItemId));
+      });
+    } else {
+      alert("Please select the product.");
+    }
   };
 
   return (
