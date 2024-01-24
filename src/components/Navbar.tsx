@@ -4,12 +4,17 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { setCharInfo } from "../features/character/characterSlice";
+import PhoneInput from "react-phone-number-input/input";
+import "react-phone-number-input/style.css";
+import { useState } from "react";
 
 const Navbar = () => {
   const cartProducts = useAppSelector((state) => state.cartProducts.data);
   const cartProductsCount = cartProducts.length;
 
   const charStatus = useAppSelector((state) => state.characters.status);
+
+  const [phoneNum, setPhoneNum] = useState();
 
   // const value = localStorage.getItem("persist_login");
   // let persistedLog;
@@ -36,6 +41,15 @@ const Navbar = () => {
       <div className="navbar">
         <div className="navbar__logo" onClick={() => navigate("/")}>
           <h1>Electronic Products</h1>
+        </div>
+
+        <div>
+          <PhoneInput
+            placeholder="Enter phone number"
+            value={phoneNum}
+            onChange={setPhoneNum}
+            defaultCountry="NP"
+          />
         </div>
 
         <div className="navbar__nonHeader">

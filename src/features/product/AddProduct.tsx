@@ -65,11 +65,11 @@ export function AddProduct() {
                   addProduct({
                     imgUrl: url,
                     productImgId,
-                    productName: formData.productName,
+                    productName: formData.productName.trim(),
                     productCategory: formData.productCategory,
                     productPrice: formData.productPrice.replace(/^0+/, ""),
                     productAvailable: formData.productAvailable,
-                    productDescription: formData.productDescription,
+                    productDescription: formData.productDescription.trim(),
                   })
                 ).then(() => {
                   setLoadingOnAdd(false);
@@ -85,11 +85,11 @@ export function AddProduct() {
           addProduct({
             imgUrl: "",
             productImgId,
-            productName: formData.productName,
+            productName: formData.productName.trim(),
             productCategory: formData.productCategory,
             productPrice: formData.productPrice.replace(/^0+/, ""),
             productAvailable: formData.productAvailable,
-            productDescription: formData.productDescription,
+            productDescription: formData.productDescription.trim(),
           })
         ).then(() => {
           setLoadingOnAdd(false);

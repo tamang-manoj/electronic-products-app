@@ -141,7 +141,7 @@ export const updateProductCount = createAsyncThunk(
       }
     );
     // console.log(newCount);
-    thunkAPI.dispatch(getCartData());
+    //  .dispatch(getCartData());
 
     // await updateDoc(doc(db, "cartProductsCollection", cartItemId), {
     //   count: newCount,

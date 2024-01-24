@@ -46,6 +46,7 @@ const CartProductsPage = () => {
                   onChange={(e) => handleInputChecked(e)}
                   value={cartProduct.cartItemId}
                 />
+                <span className="checkmark"></span>
                 <CartComponent cartProduct={cartProduct} />
               </div>
             ))}

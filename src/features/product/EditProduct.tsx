@@ -1,4 +1,4 @@
-import { editProduct } from "./productsSlice";
+import { DataState, editProduct } from "./productsSlice";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -16,11 +16,13 @@ import useFormData from "./cusomHooks/useFormData";
 import useImageData from "./cusomHooks/useImageData";
 
 export function EditProduct() {
-  const [loadingOnEdit, setLoadingOnEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { idInParam } = useParams();
 
   const product = useAppSelector((state) => {
-    return state.products.data.find((product) => product.id === idInParam);
+    return state.products.data.find(
+      (product) => product.id === idInParam
+    ) as DataState;
   });
 
   const prevId = product?.id;
@@ -54,7 +56,7 @@ export function EditProduct() {
       formData.productAvailable
     ) {
       setDisableButton(true);
-      setLoadingOnEdit(true);
+      setIsLoading(true);
 
       if (imgFile) {
         // deleting image first
@@ -70,12 +72,12 @@ export function EditProduct() {
                     editProduct({
                       id: prevId,
                       productImgId: newProductImgId,
-                      productName: formData.productName,
+                      productName: formData.productName.trim(),
                       productCategory: formData.productCategory,
                       imgUrl: url,
                       productPrice: formData.productPrice,
                       productAvailable: formData.productAvailable,
-                      productDescription: formData.productDescription,
+                      productDescription: formData.productDescription.trim(),
                     })
                   ).then(() => navigate("/"))
               );
@@ -90,12 +92,12 @@ export function EditProduct() {
                     editProduct({
                       id: prevId,
                       productImgId: newProductImgId,
-                      productName: formData.productName,
+                      productName: formData.productName.trim(),
                       productCategory: formData.productCategory,
                       imgUrl: url,
                       productPrice: formData.productPrice,
                       productAvailable: formData.productAvailable,
-                      productDescription: formData.productDescription,
+                      productDescription: formData.productDescription.trim(),
                     })
                   ).then(() => navigate("/"))
               );
@@ -108,12 +110,12 @@ export function EditProduct() {
             editProduct({
               id: prevId,
               productImgId: prevProductImgId,
-              productName: formData.productName,
+              productName: formData.productName.trim(),
               productCategory: formData.productCategory,
               imgUrl: prevImgUrl,
               productPrice: formData.productPrice,
               productAvailable: formData.productAvailable,
-              productDescription: formData.productDescription,
+              productDescription: formData.productDescription.trim(),
             })
           ).then(() => navigate("/"));
         }
@@ -125,12 +127,12 @@ export function EditProduct() {
             editProduct({
               id: prevId,
               productImgId: "",
-              productName: formData.productName,
+              productName: formData.productName.trim(),
               productCategory: formData.productCategory,
               imgUrl: "",
               productPrice: formData.productPrice,
               productAvailable: formData.productAvailable,
-              productDescription: formData.productDescription,
+              productDescription: formData.productDescription.trim(),
             })
           ).then(() => navigate("/"));
         } else if (!prevImgUrl) {
@@ -138,24 +140,24 @@ export function EditProduct() {
             editProduct({
               id: prevId,
               productImgId: "",
-              productName: formData.productName,
+              productName: formData.productName.trim(),
               productCategory: formData.productCategory,
               imgUrl: "",
               productPrice: formData.productPrice,
               productAvailable: formData.productAvailable,
-              productDescription: formData.productDescription,
+              productDescription: formData.productDescription.trim(),
             })
           ).then(() => navigate("/"));
         }
       }
-      setLoadingOnEdit(true);
+      setIsLoading(true);
       setDisableButton(false);
     }
   };
 
   return (
     <>
-      {loadingOnEdit ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <div className="form__container">

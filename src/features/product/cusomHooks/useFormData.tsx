@@ -2,7 +2,15 @@ import { useState } from "react";
 import { ErrorType } from "../AddProduct";
 import Validation from "../../../components/Validation";
 
-const useFormData = (initialState: any) => {
+export interface InitialState {
+  productName: string;
+  productCategory: string;
+  productPrice: string;
+  productAvailable: string;
+  productDescription: string;
+}
+
+const useFormData = (initialState: InitialState) => {
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState<ErrorType>({
     name: "",
@@ -13,9 +21,9 @@ const useFormData = (initialState: any) => {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData((prevData: any) => ({
+    setFormData((prevData: InitialState) => ({
       ...prevData,
-      [name]: value,
+      [name]: value.trimStart(),
     }));
   };
 
@@ -32,7 +40,6 @@ const useFormData = (initialState: any) => {
 
   return {
     formData,
-
     errors,
     checkErrors,
     handleChange,
